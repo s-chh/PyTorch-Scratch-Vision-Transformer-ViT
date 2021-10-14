@@ -6,7 +6,7 @@ The network is a scaled-down version of the original architecture from [An Image
 The model achieves around 98.5% test Accuracy on MNIST and can be fine-tuned for further performance gains.
 
 <br><br>
-Transformer HyperParameters:
+Transformer Config:
 
  | <!-- -->    | <!-- -->    |
 --- | --- | 
