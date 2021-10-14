@@ -10,6 +10,9 @@ Model HyperParametes:
 Hyperparamter | Value |
 --- | --- | 
 Input Size | 28 |
-Channels | 1 |
 Patch Size | 7 | 
 Sequence Length | 4*4 = 16 |
+Embedding Size | 96 | 
+Num of Layers | 4 | 
+Num of Heads | 8 | 
+Forward Mul | 2 | 
