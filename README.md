@@ -5,9 +5,10 @@ The original architecture from [An Image is Worth 16X16 Words](https://arxiv.org
 
 The model achieves around 98.5% test Accuracy on MNIST and can be fine-tuned for further performance gains.
 
-Model HyperParametes:
+<br><br>
+Transformer HyperParameters:
 
-Hyperparamter | Value |
+Hyperparameter | Value |
 --- | --- | 
 Input Size | 28 |
 Patch Size | 7 | 
