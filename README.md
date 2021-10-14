@@ -8,7 +8,7 @@ The model achieves around 98.5% test Accuracy on MNIST and can be fine-tuned for
 <br><br>
 Transformer HyperParameters:
 
- | |
+ s|s |
 --- | --- | 
 Input Size | 28 |
 Patch Size | 7 | 
