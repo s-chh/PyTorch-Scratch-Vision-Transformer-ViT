@@ -7,9 +7,9 @@ The model achieves around 98.5% test Accuracy on MNIST and can be fine-tuned for
 
 Model HyperParametes:
 
-Hyperparamter | Value 
---- | --- | --- 
-Input Size | 28 
-Channels | 1 
-Patch Size | 7 
-Sequence Length | 4*4 = 16
+Hyperparamter | Value |
+--- | --- | 
+Input Size | 28 |
+Channels | 1 |
+Patch Size | 7 | 
+Sequence Length | 4*4 = 16 |
