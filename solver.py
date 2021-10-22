@@ -5,7 +5,6 @@ from torch import optim
 from model import Transformer
 from sklearn.metrics import confusion_matrix, accuracy_score
 from data_loader import get_loader
-import torch.nn.functional as F
 
 class Solver(object):
     def __init__(self, args):
@@ -14,6 +13,7 @@ class Solver(object):
         self.train_loader, self.test_loader = get_loader(args)
 
         self.model = Transformer(args).cuda()
+
         self.ce = nn.CrossEntropyLoss()
 
         print('--------Network--------')
@@ -21,7 +21,7 @@ class Solver(object):
 
         if args.load_model:
             print("Using pretrained model")
-            self.model.load_state_dict(torch.load(os.path.join(self.args.src_model_path, 'Transformer.pt')))
+            self.model.load_state_dict(torch.load(os.path.join(self.args.model_path, 'Transformer.pt')))
 
     def test_dataset(self, db='test'):
         self.model.eval()
@@ -96,6 +96,6 @@ class Solver(object):
 
                 if test_acc > best_acc:
                     best_acc = test_acc
-                    torch.save(self.model.state_dict(), os.path.join(self.args.src_model_path, 'Transformer.pt'))
+                    torch.save(self.model.state_dict(), os.path.join(self.args.model_path, 'Transformer.pt'))
 
             cos_decay.step()
