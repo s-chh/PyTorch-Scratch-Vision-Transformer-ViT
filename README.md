@@ -11,9 +11,9 @@ Transformer Config:
  | <!-- -->    | <!-- -->    |
 --- | --- | 
 Input Size | 28 |
-Patch Size | 7 | 
-Sequence Length | 4*4 = 16 |
-Embedding Size | 96 | 
-Num of Layers | 4 | 
+Patch Size | 28 | 
+Sequence Length | 7*7 = 49 |
+Embedding Size | 48 | 
+Num of Layers | 6 | 
 Num of Heads | 8 | 
 Forward Multiplier | 2 | 
