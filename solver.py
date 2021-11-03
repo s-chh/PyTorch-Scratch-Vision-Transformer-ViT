@@ -5,7 +5,6 @@ from torch import optim
 from model import Transformer
 from sklearn.metrics import confusion_matrix, accuracy_score
 from data_loader import get_loader
-from torchsummary import summary
 
 class Solver(object):
     def __init__(self, args):
@@ -15,7 +14,7 @@ class Solver(object):
 
         self.model = Transformer(args).cuda()
         self.ce = nn.CrossEntropyLoss()
-        summary(self.model, (1, 28, 28))
+
         print('--------Network--------')
         print(self.model)
 
