@@ -5,6 +5,7 @@ from torch import optim
 from model import Transformer
 from sklearn.metrics import confusion_matrix, accuracy_score
 from data_loader import get_loader
+from torchsummary import summary
 
 class Solver(object):
     def __init__(self, args):
@@ -13,9 +14,8 @@ class Solver(object):
         self.train_loader, self.test_loader = get_loader(args)
 
         self.model = Transformer(args).cuda()
-
         self.ce = nn.CrossEntropyLoss()
-
+        summary(self.model, (1, 28, 28))
         print('--------Network--------')
         print(self.model)
 
@@ -66,7 +66,7 @@ class Solver(object):
         iter_per_epoch = len(self.train_loader)
         test_epoch = max(self.args.epochs // 10, 1)
 
-        optimizer = optim.Adam(self.model.parameters(), self.args.lr)
+        optimizer = optim.Adam(self.model.parameters(), self.args.lr, weight_decay=1e-5)
         cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer, self.args.epochs)
         
         for epoch in range(self.args.epochs):
@@ -86,7 +86,7 @@ class Solver(object):
                 optimizer.step()
 
                 if i % 50 == 0 or i == (iter_per_epoch - 1):
-                    print('Ep: %d/%d, iter: %d/%d, total_iters: %d, s_err: %.4f'
+                    print('Ep: %d/%d, it: %d/%d, total_iters: %d, err: %.4f'
                           % (epoch + 1, self.args.epochs, i + 1, iter_per_epoch, total_iters, clf_loss))
 
             if (epoch + 1) % test_epoch == 0:

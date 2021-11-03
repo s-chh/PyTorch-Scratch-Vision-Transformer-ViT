@@ -31,7 +31,7 @@ if __name__ == '__main__':
     parser.add_argument("--img_size", type=int, default=28, help="Img size")
     parser.add_argument("--patch_size", type=int, default=4, help="Patch Size")
     parser.add_argument("--n_channels", type=int, default=1, help="Number of channels")
-    parser.add_argument('--data_path', type=str, default='/home/local/ASUAD/schhabr6/DB/digits')
+    parser.add_argument('--data_path', type=str, default='./data/')
     parser.add_argument('--model_path', type=str, default='./model')
 
     parser.add_argument("--embed_dim", type=int, default=48, help="dimensionality of the latent space")
@@ -40,14 +40,13 @@ if __name__ == '__main__':
     parser.add_argument("--n_layers", type=int, default=6, help="number of encoder layers")
     parser.add_argument("--load_model", type=bool, default=False, help="Load saved model")
 
-    args = parser.parse_args()
-    print(args)
-    
-    args.model_path = os.path.join(args.model_path, args.dset)
-
     start_time = datetime.datetime.now()
     print("Started at " + str(start_time.strftime('%Y-%m-%d %H:%M:%S')))
 
+    args = parser.parse_args()
+    args.model_path = os.path.join(args.model_path, args.dset)
+    print(args)
+    
     main(args)
 
     end_time = datetime.datetime.now()
