@@ -16,4 +16,4 @@ Sequence Length | 7*7 = 49 |
 Embedding Size | 48 | 
 Num of Layers | 6 | 
 Num of Heads | 8 | 
-Forward Multiplier | 4 | 
+Forward Multiplier | 2 | 
