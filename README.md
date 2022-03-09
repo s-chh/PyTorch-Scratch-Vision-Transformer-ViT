@@ -3,7 +3,7 @@ Simplified Pytorch implementation of Vision Transformer (ViT) with detailed step
 
 The network is a scaled-down version of the original architecture from [An Image is Worth 16X16 Words](https://arxiv.org/pdf/2010.11929.pdf) for classifying MNIST dataset.
 
-The model achieves around **98.8%** test Accuracy on MNIST and can be fine-tuned for further performance gains.
+The model achieves around **98.8%** test Accuracy on MNIST.
 
 <br><br>
 Transformer Config:
