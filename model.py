@@ -35,23 +35,23 @@ class EmbedLayer(nn.Module):
 class AttentionLayer(nn.Module):
     def __init__(self, args):
         super(AttentionLayer, self).__init__()
-        self.num_heads = args.n_heads
+        self.n_attention_heads = args.n_attention_heads
         self.embed_dim = args.embed_dim
-        self.head_embed_dim = self.embed_dim // self.num_heads
+        self.head_embed_dim = self.embed_dim // self.n_attention_heads
 
-        self.queries = nn.Linear(self.embed_dim, self.head_embed_dim * self.num_heads, bias=True)
-        self.keys = nn.Linear(self.embed_dim, self.head_embed_dim * self.num_heads, bias=True)
-        self.values = nn.Linear(self.embed_dim, self.head_embed_dim * self.num_heads, bias=True)
+        self.queries = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads, bias=True)
+        self.keys = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads, bias=True)
+        self.values = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads, bias=True)
 
         self.fc = nn.Linear(self.embed_dim, self.embed_dim)
 
     def forward(self, q, k, v):
 
-        x_queries = self.queries(q).reshape(q.shape[0], q.shape[1], self.num_heads, self.head_embed_dim)  # B, Q, E -> B, Q, H, HE
+        x_queries = self.queries(q).reshape(q.shape[0], q.shape[1], self.n_attention_heads, self.head_embed_dim)  # B, Q, E -> B, Q, H, HE
         x_queries = x_queries.transpose(1, 2)  # B, Q, H, HE -> B, H, Q, HE
-        x_keys = self.keys(k).reshape(k.shape[0], k.shape[1], self.num_heads, self.head_embed_dim)  # B, K, E -> B, K, H, HE
+        x_keys = self.keys(k).reshape(k.shape[0], k.shape[1], self.n_attention_heads, self.head_embed_dim)  # B, K, E -> B, K, H, HE
         x_keys = x_keys.transpose(1, 2)  # B, K, H, HE -> B, H, K, HE
-        x_values = self.values(v).reshape(v.shape[0], v.shape[1], self.num_heads, self.head_embed_dim)  # B, V, E -> B, V, H, HE
+        x_values = self.values(v).reshape(v.shape[0], v.shape[1], self.n_attention_heads, self.head_embed_dim)  # B, V, E -> B, V, H, HE
         x_values = x_values.transpose(1, 2)  # B, V, H, HE -> B, H, V, HE
 
         x_queries = x_queries.reshape([-1, x_queries.shape[2], x_queries.shape[3]])  # B, H, Q, HE -> (BH), Q, HE
@@ -64,7 +64,7 @@ class AttentionLayer(nn.Module):
         x_attention = torch.softmax(x_attention, dim=-1)
 
         x = x_attention.bmm(x_values)  # (BH), Q, K . (BH), V, HE -> (BH), Q, HE
-        x = x.reshape([-1, self.num_heads, x.shape[1], x.shape[2]])  # (BH), Q, HE -> B, H, Q, HE
+        x = x.reshape([-1, self.n_attention_heads, x.shape[1], x.shape[2]])  # (BH), Q, HE -> B, H, Q, HE
         x = x.transpose(1, 2)  # B, H, Q, HE -> B, Q, H, HE
         x = x.reshape(x.shape[0], x.shape[1], -1)  # B, Q, H, HE -> B, Q, E
         return x

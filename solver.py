@@ -60,12 +60,9 @@ class Solver(object):
         return train_acc, test_acc
 
     def train(self):
-        total_iters = 0
-        best_acc = 0
         iter_per_epoch = len(self.train_loader)
-        test_epoch = max(self.args.epochs // 10, 1)
 
-        optimizer = optim.Adam(self.model.parameters(), self.args.lr, weight_decay=1e-5)
+        optimizer = optim.AdamW(self.model.parameters(), self.args.lr, weight_decay=1e-3)
         cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer, self.args.epochs)
         
         for epoch in range(self.args.epochs):
@@ -73,7 +70,6 @@ class Solver(object):
             self.model.train()
 
             for i, (imgs, labels) in enumerate(self.train_loader):
-                total_iters += 1
 
                 imgs, labels = imgs.cuda(), labels.cuda()
 
@@ -85,16 +81,10 @@ class Solver(object):
                 optimizer.step()
 
                 if i % 50 == 0 or i == (iter_per_epoch - 1):
-                    print('Ep: %d/%d, it: %d/%d, total_iters: %d, err: %.4f'
-                          % (epoch + 1, self.args.epochs, i + 1, iter_per_epoch, total_iters, clf_loss))
+                    print('Ep: %d/%d, it: %d/%d, err: %.4f' % (epoch + 1, self.args.epochs, i + 1, iter_per_epoch, clf_loss))
 
-            if (epoch + 1) % test_epoch == 0:
-                test_acc, cm = self.test_dataset('test')
-                print("Test acc: %0.2f" % (test_acc))
-                print(cm)
-
-                if test_acc > best_acc:
-                    best_acc = test_acc
-                    torch.save(self.model.state_dict(), os.path.join(self.args.model_path, 'Transformer.pt'))
+            test_acc, cm = self.test_dataset('test')
+            print("Test acc: %0.2f" % (test_acc))
+            print(cm,"\n")
 
             cos_decay.step()

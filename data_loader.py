@@ -5,19 +5,28 @@ import os
 
 
 def get_loader(args):
-    tr = transforms.Compose([transforms.ToTensor(),
-                             transforms.Normalize([0.5], [0.5])])
     if args.dset == 'mnist':
-        train = datasets.MNIST(os.path.join(args.data_path, args.dset), train=True, download=True, transform=tr)
-        test = datasets.MNIST(os.path.join(args.data_path, args.dset), train=False, download=True, transform=tr)
+        tr_transform = transforms.Compose([transforms.RandomCrop(args.img_size, padding=2), 
+                                            transforms.ToTensor(), 
+                                            transforms.Normalize([0.5], [0.5])])
+        train = datasets.MNIST(os.path.join(args.data_path, args.dset), train=True, download=True, transform=tr_transform)
+
+        te_transform = transforms.Compose([transforms.Resize([args.img_size, args.img_size]), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
+        test = datasets.MNIST(os.path.join(args.data_path, args.dset), train=False, download=True, transform=te_transform)
 
     elif args.dset == 'fmnist':
-        train = datasets.FashionMNIST(os.path.join(args.data_path, args.dset), train=True, download=True, transform=tr)
-        test = datasets.FashionMNIST(os.path.join(args.data_path, args.dset), train=False, download=True, transform=tr)
+        tr_transform = transforms.Compose([transforms.RandomCrop(args.img_size, padding=2), 
+                                            transforms.RandomHorizontalFlip(), 
+                                            transforms.ToTensor(), 
+                                            transforms.Normalize([0.5], [0.5])])
+        train = datasets.FashionMNIST(os.path.join(args.data_path, args.dset), train=True, download=True, transform=tr_transform)
+
+        te_transform = transforms.Compose([transforms.Resize([args.img_size, args.img_size]), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
+        test = datasets.FashionMNIST(os.path.join(args.data_path, args.dset), train=False, download=True, transform=te_transform)
 
     else:
-        train = datasets.ImageFolder(root=os.path.join(args.data_path, args.dset, 'trainset'), transform=tr)
-        test = datasets.ImageFolder(root=os.path.join(args.data_path, args.dset, 'testset'), transform=tr)
+        print("Unkown dataset")
+        exit(0)
 
     train_loader = torch.utils.data.DataLoader(dataset=train,
                                                  batch_size=args.batch_size,

@@ -34,8 +34,8 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, default='./data/')
     parser.add_argument('--model_path', type=str, default='./model')
 
-    parser.add_argument("--embed_dim", type=int, default=48, help="dimensionality of the latent space")
-    parser.add_argument("--n_heads", type=int, default=8, help="number of heads to be used")
+    parser.add_argument("--embed_dim", type=int, default=64, help="dimensionality of the latent space")
+    parser.add_argument("--n_attention_heads", type=int, default=4, help="number of heads to be used")
     parser.add_argument("--forward_mul", type=int, default=2, help="forward multiplier")
     parser.add_argument("--n_layers", type=int, default=6, help="number of encoder layers")
     parser.add_argument("--load_model", type=bool, default=False, help="Load saved model")
