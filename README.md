@@ -5,6 +5,12 @@ The network is a scaled-down version of the original architecture from [An Image
 
 The model achieves around **99.4%** test Accuracy on MNIST and **91.2%** test Accuracy on FashionMNIST.
 
+Run command for MNIST:
+Python main.py
+
+Run command for FashionMNIST:
+Python main.py --dset fmnist
+
 <br><br>
 Transformer Config:
 
