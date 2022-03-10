@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import os
 from torch import optim
-from model import Transformer
+from model import VisionTransformer
 from sklearn.metrics import confusion_matrix, accuracy_score
 from data_loader import get_loader
 
@@ -12,7 +12,7 @@ class Solver(object):
 
         self.train_loader, self.test_loader = get_loader(args)
 
-        self.model = Transformer(args).cuda()
+        self.model = VisionTransformer(args).cuda()
         self.ce = nn.CrossEntropyLoss()
 
         print('--------Network--------')
