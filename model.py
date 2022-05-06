@@ -109,7 +109,7 @@ class Classifier(nn.Module):
 
 class VisionTransformer(nn.Module):
     def __init__(self, args):
-        super(Transformer, self).__init__()
+        super(VisionTransformer, self).__init__()
         self.embedding = EmbedLayer(args)
         self.encoder = nn.Sequential(*[Encoder(args) for _ in range(args.n_layers)], nn.LayerNorm(args.embed_dim))
         self.classifier = Classifier(args)
