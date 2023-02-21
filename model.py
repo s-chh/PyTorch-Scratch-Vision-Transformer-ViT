@@ -85,7 +85,7 @@ class Encoder(nn.Module):
         x = x + x_
         x = self.norm1(x)
         x_ = self.fc1(x)
-        x = self.activation(x)
+        x_ = self.activation(x_)
         x_ = self.fc2(x_)
         x = x + x_
         x = self.norm2(x)
