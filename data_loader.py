@@ -16,7 +16,6 @@ def get_loader(args):
 
     elif args.dset == 'fmnist':
         tr_transform = transforms.Compose([transforms.RandomCrop(args.img_size, padding=2), 
-                                            transforms.RandomHorizontalFlip(), 
                                             transforms.ToTensor(), 
                                             transforms.Normalize([0.5], [0.5])])
         train = datasets.FashionMNIST(os.path.join(args.data_path, args.dset), train=True, download=True, transform=tr_transform)
@@ -25,7 +24,7 @@ def get_loader(args):
         test = datasets.FashionMNIST(os.path.join(args.data_path, args.dset), train=False, download=True, transform=te_transform)
 
     else:
-        print("Unkown dataset")
+        print("Unknown dataset")
         exit(0)
 
     train_loader = torch.utils.data.DataLoader(dataset=train,

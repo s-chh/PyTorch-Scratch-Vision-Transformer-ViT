@@ -6,6 +6,7 @@ from model import VisionTransformer
 from sklearn.metrics import confusion_matrix, accuracy_score
 from data_loader import get_loader
 
+
 class Solver(object):
     def __init__(self, args):
         self.args = args
@@ -30,7 +31,7 @@ class Solver(object):
 
         if db.lower() == 'train':
             loader = self.train_loader
-        elif db.lower() == 'test':
+        else:
             loader = self.test_loader
 
         for (imgs, labels) in loader:
@@ -50,21 +51,21 @@ class Solver(object):
 
     def test(self):
         train_acc, cm = self.test_dataset('train')
-        print("Tr Acc: %.2f" % (train_acc))
+        print("Tr Acc: %.2f" % train_acc)
         print(cm)
 
         test_acc, cm = self.test_dataset('test')
-        print("Te Acc: %.2f" % (test_acc))
+        print("Te Acc: %.2f" % test_acc)
         print(cm)
-    
+
         return train_acc, test_acc
 
     def train(self):
         iter_per_epoch = len(self.train_loader)
 
         optimizer = optim.AdamW(self.model.parameters(), self.args.lr, weight_decay=1e-3)
-        cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer, self.args.epochs)
-        
+        cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer, self.args.epochs, verbose=True)
+
         for epoch in range(self.args.epochs):
 
             self.model.train()
@@ -84,7 +85,7 @@ class Solver(object):
                     print('Ep: %d/%d, it: %d/%d, err: %.4f' % (epoch + 1, self.args.epochs, i + 1, iter_per_epoch, clf_loss))
 
             test_acc, cm = self.test_dataset('test')
-            print("Test acc: %0.2f" % (test_acc))
-            print(cm,"\n")
+            print("Test acc: %0.2f" % test_acc)
+            print(cm, "\n")
 
             cos_decay.step()
