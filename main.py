@@ -20,7 +20,7 @@ def print_args(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Transformer')
-    parser.add_argument('--epochs', type=int, default=50)
+    parser.add_argument('--epochs', type=int, default=200)
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--n_classes', type=int, default=10)
     parser.add_argument('--num_workers', type=int, default=4)

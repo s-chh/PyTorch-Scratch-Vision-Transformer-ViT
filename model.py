@@ -79,15 +79,8 @@ class Encoder(nn.Module):
         self.norm2 = nn.LayerNorm(args.embed_dim)
 
     def forward(self, x):
-        x_ = self.attention(x)
-        x = x + x_ # Skip connection
-        x = self.norm1(x) # Normalization
-
-        x_ = self.fc1(x) 
-        x_ = self.activation(x_)
-        x_ = self.fc2(x_)
-        x = x + x_ # Skip connection
-        x = self.norm2(x) # Normalization
+        x = x + self.attention(self.norm1(x)) # Skip connections
+        x = x + self.fc2(self.activation(self.fc1(self.norm2(x))))  # Skip connections
         return x
 
 
@@ -111,10 +104,12 @@ class VisionTransformer(nn.Module):
         super().__init__()
         self.embedding = EmbedLayer(args)
         self.encoder = nn.Sequential(*[Encoder(args) for _ in range(args.n_layers)], nn.LayerNorm(args.embed_dim))
+        self.norm = nn.LayerNorm(args.embed_dim) # Final normalization layer after the last block
         self.classifier = Classifier(args)
 
     def forward(self, x):
         x = self.embedding(x)
         x = self.encoder(x)
+        x = self.norm(x)
         x = self.classifier(x)
         return x
