@@ -70,5 +70,10 @@ Transformer Config:
     <td>Forward Multiplier </td>
     <td>2</td>
   </tr>
+  <tr>
+    <td>Epochs </td>
+    <td>100</td>
+  </tr>
+
 </table>
 
