@@ -12,7 +12,7 @@ Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detai
 Run commands: <br>
 <table>
   <tr>
-    <th>Dataset</th>
+    <th>Config</th>
     <th>Command</th>
     <th>Test Acc</th>
   </tr>
@@ -37,12 +37,38 @@ Run commands: <br>
 <br><br>
 Transformer Config:
 
- | <!-- -->    | <!-- -->    |
---- | --- | 
-Input Size | 28 |
-Patch Size | 4 | 
-Sequence Length | 7*7 = 49 |
-Embedding Size | 96 | 
-Num of Layers | 6 | 
-Num of Heads | 4 | 
-Forward Multiplier | 2 | 
+<table>
+  <tr>
+    <th>Config</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>Input Size</td>
+    <td>28</td>
+  </tr>
+  <tr>
+    <td>Patch Size</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>Sequence Length</td>
+    <td>7*7 = 49</td>
+  </tr>
+  <tr>
+    <td>Embedding Size </td>
+    <td>96</td>
+  </tr>
+  <tr>
+    <td>Num of Layers </td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>Num of Heads </td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>Forward Multiplier </td>
+    <td>2</td>
+  </tr>
+</table>
+
