@@ -19,22 +19,22 @@ Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
   </tr>
   <tr>
     <td>MNIST</td>
-    <td>python -u main.py --dataset mnist --epochs 100</td>
+    <td>python main.py --dataset mnist --epochs 100</td>
     <td>99.4</td>
   </tr>
   <tr>
     <td>Fashion MNIST</td>
-    <td>python -u main.py --dataset fmnist</td>
+    <td>python main.py --dataset fmnist</td>
     <td>93.0</td>
   </tr>
   <tr>
     <td>SVHN</td>
-    <td>python -u main.py --dataset svhn --n_channels 3 --image_size 32</td>
+    <td>python main.py --dataset svhn --n_channels 3 --image_size 32</td>
     <td>92.0</td>
   </tr>
   <tr>
     <td>CIFAR-10</td>
-    <td>python -u main.py --dataset cifar10 --n_channels 3 --image_size 32</td>
+    <td>python main.py --dataset cifar10 --n_channels 3 --image_size 32</td>
     <td>77.0</td>
   </tr>
 </table>
