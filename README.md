@@ -12,7 +12,7 @@ Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detai
 Run commands: <br>
 <table>
   <tr>
-    <th>Config</th>
+    <th>Dataset</th>
     <th>Command</th>
     <th>Test Acc</th>
   </tr>
