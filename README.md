@@ -1,5 +1,5 @@
 # Vision Transformer-MNIST
-Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer model.py).
+Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to model.py) for learning internal operations.
 
 The network is a scaled-down version of the original architecture from [An Image is Worth 16X16 Words](https://arxiv.org/pdf/2010.11929.pdf) with only 400k parameters (Original ViT-Base has 86M) for classifying MNIST, FashionMNIST or SVHN dataset.
 
