@@ -1,5 +1,5 @@
 # Vision Transformer-MNIST
-Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to model.py) for understanding internal operations. <br> <br>
+Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to <a href="model.py">model.py</a>) for understanding internal operations. <br> <br>
 
 <ul>
   <li>Scaled-down version of the original ViT architecture from <a href="https://arxiv.org/pdf/2010.11929.pdf">An Image is Worth 16X16 Words</a> for small datasets. </lr>
@@ -9,7 +9,7 @@ Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detai
 
 <br><br>
 
-Run commands (also available in scripts.sh): <br>
+Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
 <table>
   <tr>
     <th>Dataset</th>
