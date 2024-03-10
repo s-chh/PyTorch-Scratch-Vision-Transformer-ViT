@@ -31,6 +31,11 @@ Run commands: <br>
     <td>python -u main.py --dataset svhn --n_channels 3 --image_size 32</td>
     <td>92.0</td>
   </tr>
+  <tr>
+    <td>CIFAR-10</td>
+    <td>python -u main.py --dataset cifar10 --n_channels 3 --image_size 32</td>
+    <td>77.0</td>
+  </tr>
 </table>
 
 
@@ -43,16 +48,23 @@ Transformer Config:
     <th>Value</th>
   </tr>
   <tr>
-    <td>Input Size</td>
-    <td>28</td>
+    <td rowspan="2">Input Size</td>
+    <td> 1 X 28 X 28   (MNIST and FMNIST) </td>
   </tr>
+  <tr>
+    <td>  3 X 32 X 32   (SVHN and CIFAR10) </td>
+  </tr>
+
   <tr>
     <td>Patch Size</td>
     <td>4</td>
   </tr>
   <tr>
-    <td>Sequence Length</td>
-    <td>7*7 = 49</td>
+    <td rowspan="2">Sequence Length</td>
+    <td>7*7 = 49 (MNIST and FMNIST) </td>
+  </tr>
+  <tr>
+    <td>8*8 = 64 (SVHN and CIFAR10) </td>
   </tr>
   <tr>
     <td>Embedding Size </td>
@@ -70,10 +82,5 @@ Transformer Config:
     <td>Forward Multiplier </td>
     <td>2</td>
   </tr>
-  <tr>
-    <td>Epochs </td>
-    <td>100</td>
-  </tr>
-
 </table>
 
