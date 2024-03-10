@@ -2,6 +2,7 @@ import argparse
 import datetime
 import os
 from solver import Solver
+import torch
 
 
 def main(args):
@@ -9,7 +10,7 @@ def main(args):
 
     solver = Solver(args)
     solver.train()
-    solver.test()
+    solver.test(train=True)
 
 
 def print_args(args):
@@ -18,34 +19,44 @@ def print_args(args):
     print()
 
 
+def update_args(args):
+    args.model_path = os.path.join(args.model_path, args.dataset)
+    args.n_patches = (args.image_size // args.patch_size) ** 2
+    args.is_cuda = torch.cuda.is_available()
+    return args
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Transformer')
+    parser = argparse.ArgumentParser(description='Vision Transformer for MNIST')
+
+    # Training Arguments
     parser.add_argument('--epochs', type=int, default=200)
-    parser.add_argument('--batch_size', type=int, default=128)
+    parser.add_argument('--warmup_epochs', type=int, default=10)
+    parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--n_classes', type=int, default=10)
     parser.add_argument('--num_workers', type=int, default=4)
     parser.add_argument('--lr', type=float, default=5e-4)
-    parser.add_argument('--log_step', type=int, default=50)
 
-    parser.add_argument('--dset', type=str, default='mnist', help=['mnist', 'fmnist'])
-    parser.add_argument("--img_size", type=int, default=28, help="Img size")
+    # Data arguments
+    parser.add_argument('--dataset', type=str, default='mnist', help=['mnist', 'fmnist', 'svhn'])
+    parser.add_argument("--image_size", type=int, default=28, help="Image size")
     parser.add_argument("--patch_size", type=int, default=4, help="Patch Size")
     parser.add_argument("--n_channels", type=int, default=1, help="Number of channels")
     parser.add_argument('--data_path', type=str, default='./data/')
-    parser.add_argument('--model_path', type=str, default='./model')
 
+    # ViT Arguments
     parser.add_argument("--embed_dim", type=int, default=96, help="dimensionality of the latent space")
     parser.add_argument("--n_attention_heads", type=int, default=4, help="number of heads to be used")
     parser.add_argument("--forward_mul", type=int, default=2, help="forward multiplier")
     parser.add_argument("--n_layers", type=int, default=6, help="number of encoder layers")
+    parser.add_argument('--model_path', type=str, default='./model')
     parser.add_argument("--load_model", type=bool, default=False, help="Load saved model")
 
     start_time = datetime.datetime.now()
     print("Started at " + str(start_time.strftime('%Y-%m-%d %H:%M:%S')))
 
     args = parser.parse_args()
-    args.model_path = os.path.join(args.model_path, args.dset)
-    print(args)
+    args = update_args(args)
+    print_args(args)
     
     main(args)
 

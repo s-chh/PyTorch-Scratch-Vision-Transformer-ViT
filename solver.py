@@ -6,86 +6,99 @@ from model import VisionTransformer
 from sklearn.metrics import confusion_matrix, accuracy_score
 from data_loader import get_loader
 
-
 class Solver(object):
     def __init__(self, args):
         self.args = args
 
         self.train_loader, self.test_loader = get_loader(args)
 
-        self.model = VisionTransformer(args).cuda()
-        self.ce = nn.CrossEntropyLoss()
+        self.model = VisionTransformer(n_channels=self.args.n_channels, embed_dim=self.args.embed_dim, 
+                                        n_layers=self.args.n_layers, n_attention_heads=self.args.n_attention_heads, 
+                                        forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
+                                        patch_size=self.args.patch_size, n_classes=self.args.n_classes)
+        
+        if self.args.is_cuda:
+            print("Using GPU")
+            self.model = self.model.cuda()
+        else:
+            print("Cuda not available.")
 
         print('--------Network--------')
         print(self.model)
 
         if args.load_model:
             print("Using pretrained model")
-            self.model.load_state_dict(torch.load(os.path.join(self.args.model_path, 'Transformer.pt')))
+            self.model.load_state_dict(torch.load(os.path.join(self.args.model_path, 'ViT_model.pt')))
 
-    def test_dataset(self, db='test'):
+        self.ce = nn.CrossEntropyLoss()
+
+    def test_dataset(self, loader):
         self.model.eval()
 
         actual = []
         pred = []
 
-        if db.lower() == 'train':
-            loader = self.train_loader
-        else:
-            loader = self.test_loader
-
-        for (imgs, labels) in loader:
-            imgs = imgs.cuda()
+        for (x, y) in loader:
+            if self.args.is_cuda:
+                x = x.cuda()
 
             with torch.no_grad():
-                class_out = self.model(imgs)
-            _, predicted = torch.max(class_out.data, 1)
+                logits = self.model(x)
+            predicted = torch.max(logits, 1)[1]
 
-            actual += labels.tolist()
+            actual += y.tolist()
             pred += predicted.tolist()
 
-        acc = accuracy_score(y_true=actual, y_pred=pred) * 100
+        acc = accuracy_score(y_true=actual, y_pred=pred)
         cm = confusion_matrix(y_true=actual, y_pred=pred, labels=range(self.args.n_classes))
 
         return acc, cm
 
-    def test(self):
-        train_acc, cm = self.test_dataset('train')
-        print("Tr Acc: %.2f" % train_acc)
+    def test(self, train=True):
+        if train:
+            acc, cm = self.test_dataset(self.train_loader)
+            print(f"Train acc: {acc:.2%}\nTrain Confusion Matrix:")
+            print(cm)
+
+        acc, cm = self.test_dataset(self.test_loader)
+        print(f"Test acc: {acc:.2%}\nTest Confusion Matrix:")
         print(cm)
 
-        test_acc, cm = self.test_dataset('test')
-        print("Te Acc: %.2f" % test_acc)
-        print(cm)
-
-        return train_acc, test_acc
+        return acc
 
     def train(self):
         iter_per_epoch = len(self.train_loader)
 
-        optimizer = optim.AdamW(self.model.parameters(), self.args.lr, weight_decay=1e-3)
-        cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer, self.args.epochs, verbose=True)
+        optimizer = optim.AdamW(self.model.parameters(), lr=self.args.lr, weight_decay=1e-3)
+        linear_warmup = optim.lr_scheduler.LinearLR(optimizer, start_factor=1/self.args.warmup_epochs, end_factor=1.0, total_iters=self.args.warmup_epochs, last_epoch=-1, verbose=True)
+        cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=self.args.epochs-self.args.warmup_epochs, eta_min=1e-5, verbose=True)
 
+        best_acc = 0
         for epoch in range(self.args.epochs):
 
             self.model.train()
 
-            for i, (imgs, labels) in enumerate(self.train_loader):
+            for i, (x, y) in enumerate(self.train_loader):
+                if self.args.is_cuda:
+                    x, y = x.cuda(), y.cuda()
 
-                imgs, labels = imgs.cuda(), labels.cuda()
-
-                logits = self.model(imgs)
-                clf_loss = self.ce(logits, labels)
+                logits = self.model(x)
+                loss = self.ce(logits, y)
 
                 optimizer.zero_grad()
-                clf_loss.backward()
+                loss.backward()
                 optimizer.step()
 
                 if i % 50 == 0 or i == (iter_per_epoch - 1):
-                    print('Ep: %d/%d, it: %d/%d, err: %.4f' % (epoch + 1, self.args.epochs, i + 1, iter_per_epoch, clf_loss))
+                    print(f'Ep: {epoch+1}/{self.args.epochs}, It: {i+1}/{iter_per_epoch}, loss: {loss:.4f}')
 
-            test_acc, cm = self.test_dataset('test')
-            print("Test acc: %0.2f" % test_acc)
-            print(cm, "\n")
+            test_acc = self.test(train=((epoch+1)%25==0)) # Test training set every 25 epochs
+            best_acc = max(test_acc, best_acc)
+            print(f"Best test acc: {best_acc:.2%}\n")
 
-            cos_decay.step()
+            torch.save(self.model.state_dict(), os.path.join(self.args.model_path, "ViT_model.pt"))
+            
+            if epoch < self.args.warmup_epochs:
+                linear_warmup.step()
+            else:
+                cos_decay.step()

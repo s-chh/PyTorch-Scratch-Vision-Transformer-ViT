@@ -5,23 +5,45 @@ import os
 
 
 def get_loader(args):
-    if args.dset == 'mnist':
-        tr_transform = transforms.Compose([transforms.RandomCrop(args.img_size, padding=2), 
+    if args.dataset == 'mnist':
+        train_transform = transforms.Compose([transforms.RandomCrop(args.image_size, padding=2, padding_mode='edge'), 
                                             transforms.ToTensor(), 
                                             transforms.Normalize([0.5], [0.5])])
-        train = datasets.MNIST(os.path.join(args.data_path, args.dset), train=True, download=True, transform=tr_transform)
+        train = datasets.MNIST(os.path.join(args.data_path, args.dataset), train=True, download=True, transform=train_transform)
 
-        te_transform = transforms.Compose([transforms.Resize([args.img_size, args.img_size]), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
-        test = datasets.MNIST(os.path.join(args.data_path, args.dset), train=False, download=True, transform=te_transform)
+        test_transform = transforms.Compose([transforms.Resize([args.image_size, args.image_size]), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
+        test = datasets.MNIST(os.path.join(args.data_path, args.dataset), train=False, download=True, transform=test_transform)
 
-    elif args.dset == 'fmnist':
-        tr_transform = transforms.Compose([transforms.RandomCrop(args.img_size, padding=2), 
+
+    elif args.dataset == 'fmnist':
+        train_transform = transforms.Compose([transforms.RandomCrop(args.image_size, padding=2, padding_mode='edge'), 
+                                            transforms.RandomHorizontalFlip(),
                                             transforms.ToTensor(), 
                                             transforms.Normalize([0.5], [0.5])])
-        train = datasets.FashionMNIST(os.path.join(args.data_path, args.dset), train=True, download=True, transform=tr_transform)
+        train = datasets.FashionMNIST(os.path.join(args.data_path, args.dataset), train=True, download=True, transform=train_transform)
 
-        te_transform = transforms.Compose([transforms.Resize([args.img_size, args.img_size]), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
-        test = datasets.FashionMNIST(os.path.join(args.data_path, args.dset), train=False, download=True, transform=te_transform)
+        test_transform = transforms.Compose([transforms.Resize([args.image_size, args.image_size]), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
+        test = datasets.FashionMNIST(os.path.join(args.data_path, args.dataset), train=False, download=True, transform=test_transform)
+
+
+    elif args.dataset == 'svhn':
+        train_transform = transforms.Compose([transforms.RandomCrop(args.image_size, padding=2, padding_mode='edge'), 
+                                            transforms.ToTensor(), 
+                                            transforms.Normalize([0.5], [0.5])])
+        train = datasets.SVHN(os.path.join(args.data_path, args.dataset), split='train', download=True, transform=train_transform)
+
+        test_transform = transforms.Compose([transforms.Resize([args.image_size, args.image_size]), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
+        test = datasets.SVHN(os.path.join(args.data_path, args.dataset), split='test', download=True, transform=test_transform)
+
+    elif args.dataset == 'cifar10':
+        train_transform = transforms.Compose([transforms.RandomCrop(args.image_size, padding=4, padding_mode='edge'), 
+                                            transforms.RandomHorizontalFlip(),
+                                            transforms.ToTensor(), 
+                                            transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2470, 0.2435, 0.2616])])
+        train = datasets.CIFAR10(os.path.join(args.data_path, args.dataset), train=True, download=True, transform=train_transform)
+
+        test_transform = transforms.Compose([transforms.Resize([args.image_size, args.image_size]), transforms.ToTensor(), transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2470, 0.2435, 0.2616])])
+        test = datasets.CIFAR10(os.path.join(args.data_path, args.dataset), train=False, download=True, transform=test_transform)
 
     else:
         print("Unknown dataset")
