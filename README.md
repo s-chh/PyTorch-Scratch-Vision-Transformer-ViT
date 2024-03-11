@@ -46,41 +46,43 @@ Transformer Config:
 <table>
   <tr>
     <th>Config</th>
-    <th>Value</th>
+    <th>MNIST and FMNIST</th>
+    <th>SVHN and CIFAR10</th>
   </tr>
   <tr>
-    <td rowspan="2">Input Size</td>
-    <td> 1 X 28 X 28   (MNIST and FMNIST) </td>
-  </tr>
-  <tr>
-    <td>  3 X 32 X 32   (SVHN and CIFAR10) </td>
+    <td>Input Size</td>
+    <td> 1 X 28 X 28   </td>
+    <td> 3 X 32 X 32  </td>
   </tr>
 
   <tr>
     <td>Patch Size</td>
     <td>4</td>
+    <td>4</td>
   </tr>
   <tr>
-    <td rowspan="2">Sequence Length</td>
-    <td>7*7 = 49 (MNIST and FMNIST) </td>
-  </tr>
-  <tr>
-    <td>8*8 = 64 (SVHN and CIFAR10) </td>
+    <td>Sequence Length</td>
+    <td>7*7 = 49</td>
+    <td>8*8 = 64</td>
   </tr>
   <tr>
     <td>Embedding Size </td>
+    <td>96</td>
     <td>96</td>
   </tr>
   <tr>
     <td>Num of Layers </td>
     <td>6</td>
+    <td>6</td>
   </tr>
   <tr>
     <td>Num of Heads </td>
     <td>4</td>
+    <td>4</td>
   </tr>
   <tr>
     <td>Forward Multiplier </td>
+    <td>2</td>
     <td>2</td>
   </tr>
 </table>
