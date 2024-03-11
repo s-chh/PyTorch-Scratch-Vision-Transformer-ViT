@@ -14,7 +14,7 @@ Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
 <table>
   <tr>
     <th>Dataset</th>
-    <th>Command</th>
+    <th>Run command</th>
     <th>Test Acc</th>
   </tr>
   <tr>
