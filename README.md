@@ -3,9 +3,9 @@ Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detai
 
 <ul>
   <li>Scaled-down version of the original ViT architecture from <a href="https://arxiv.org/pdf/2010.11929.pdf">An Image is Worth 16X16 Words</a>. </li>
-   <li>Has only 400k parameters (Original ViT-Base has 86 million). </li>
-  <li>Supports small datasets by using a smaller patch size of 4.</li>
-  <li>Datasets: MNIST, FashionMNIST, SVHN, and CIFAR10.</li>
+  <li>Has only 400k parameters (Original ViT-Base has 86 million). </li>
+  <li>Works with small datasets by using a smaller patch size of 4.</li>
+  <li>Supported datasets: MNIST, FashionMNIST, SVHN, and CIFAR10.</li>
 </ul>  
 
 <br><br>
