@@ -37,7 +37,7 @@ if __name__ == '__main__':
     parser.add_argument('--lr', type=float, default=5e-4)
 
     # Data arguments
-    parser.add_argument('--dataset', type=str, default='mnist', help=['mnist', 'fmnist', 'svhn'])
+    parser.add_argument('--dataset', type=str, default='mnist', help=['mnist', 'fmnist', 'svhn', 'cifar10'])
     parser.add_argument("--image_size", type=int, default=28, help="Image size")
     parser.add_argument("--patch_size", type=int, default=4, help="Patch Size")
     parser.add_argument("--n_channels", type=int, default=1, help="Number of channels")
