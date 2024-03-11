@@ -38,6 +38,9 @@ Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
     <td>77.0</td>
   </tr>
 </table>
+<br>
+The default path for downloading the dataset is "./data" and can be changed using the --data_path argument.
+
 
 
 <br><br>
