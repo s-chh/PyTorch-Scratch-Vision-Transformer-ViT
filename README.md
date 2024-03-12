@@ -25,12 +25,12 @@ Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
   <tr>
     <td>Fashion MNIST</td>
     <td>python main.py --dataset fmnist</td>
-    <td>93.0</td>
+    <td>92.5</td>
   </tr>
   <tr>
     <td>SVHN</td>
     <td>python main.py --dataset svhn --n_channels 3 --image_size 32</td>
-    <td>92.0</td>
+    <td>91.5</td>
   </tr>
   <tr>
     <td>CIFAR-10</td>
