@@ -52,16 +52,17 @@ class SelfAttention(nn.Module):
         xv = self.values(x).reshape(m, s, self.n_attention_heads, self.head_embed_dim)  # B, V, E -> B, V, H, HE
         xv = xv.transpose(1, 2)  # B, V, H, HE -> B, H, V, HE
 
-        xq = xq.reshape([-1, s, self.head_embed_dim])  # B, H, Q, HE -> (BH), Q, HE
-        xk = xk.reshape([-1, s, self.head_embed_dim])  # B, H, K, HE -> (BH), K, HE
-        xv = xv.reshape([-1, s, self.head_embed_dim])  # B, H, V, HE -> (BH), V, HE
+        # Compute Attention Matrix
+        xk = xk.transpose(-1, -2)  # B, H, K, HE -> B, H, HE, K
+        x_attention = torch.matmul(xq, xk)  # B, H, Q, HE  *  B, H, HE, K -> B, H, Q, K
 
-        xk = xk.transpose(1, 2)  # (BH), K, HE -> (BH), HE, K
-        x_attention = xq.bmm(xk)  # (BH), Q, HE  .  (BH), HE, K -> (BH), Q, K
+        x_attention /= float(self.head_embed_dim) ** 0.5
         x_attention = torch.softmax(x_attention, dim=-1)
 
-        x = x_attention.bmm(xv)  # (BH), Q, K . (BH), V, HE -> (BH), Q, HE
-        x = x.reshape([-1, self.n_attention_heads, s, self.head_embed_dim])  # (BH), Q, HE -> B, H, Q, HE
+        # Compute Attention Values
+        x = torch.matmul(x_attention, xv)  # B, H, Q, K * B, H, V, HE -> B, H, Q, HE
+
+        # Format the output
         x = x.transpose(1, 2)  # B, H, Q, HE -> B, Q, H, HE
         x = x.reshape(m, s, e)  # B, Q, H, HE -> B, Q, E
         return x
