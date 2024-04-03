@@ -1,4 +1,4 @@
-# Vision Transformer-MNIST-CIFAR10
+# Vision Transformer-MNIST and CIFAR-10
 Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to <a href="model.py">model.py</a>). <br> <br>
 
 <ul>
