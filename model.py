@@ -56,6 +56,7 @@ class SelfAttention(nn.Module):
         xk = xk.transpose(-1, -2)  # B, H, K, HE -> B, H, HE, K
         x_attention = torch.matmul(xq, xk)  # B, H, Q, HE  *  B, H, HE, K -> B, H, Q, K
 
+        # Scale presoftmax values for stability
         x_attention /= float(self.head_embed_dim) ** 0.5
         x_attention = torch.softmax(x_attention, dim=-1)
 
