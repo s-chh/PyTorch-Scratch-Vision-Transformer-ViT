@@ -38,18 +38,18 @@ class SelfAttention(nn.Module):
         self.n_attention_heads = n_attention_heads
         self.head_embed_dim = embed_dim // n_attention_heads
 
-        self.queries = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads, bias=True)
-        self.keys = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads, bias=True)
-        self.values = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads, bias=True)
+        self.queries = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads)
+        self.keys = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads)
+        self.values = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads)
 
     def forward(self, x):
-        m, s, e = x.shape
+        b, s, e = x.shape
 
-        xq = self.queries(x).reshape(m, s, self.n_attention_heads, self.head_embed_dim)  # B, Q, E -> B, Q, H, HE
+        xq = self.queries(x).reshape(b, s, self.n_attention_heads, self.head_embed_dim)  # B, Q, E -> B, Q, H, HE
         xq = xq.transpose(1, 2)  # B, Q, H, HE -> B, H, Q, HE
-        xk = self.keys(x).reshape(m, s, self.n_attention_heads, self.head_embed_dim)  # B, K, E -> B, K, H, HE
+        xk = self.keys(x).reshape(b, s, self.n_attention_heads, self.head_embed_dim)  # B, K, E -> B, K, H, HE
         xk = xk.transpose(1, 2)  # B, K, H, HE -> B, H, K, HE
-        xv = self.values(x).reshape(m, s, self.n_attention_heads, self.head_embed_dim)  # B, V, E -> B, V, H, HE
+        xv = self.values(x).reshape(b, s, self.n_attention_heads, self.head_embed_dim)  # B, V, E -> B, V, H, HE
         xv = xv.transpose(1, 2)  # B, V, H, HE -> B, H, V, HE
 
         # Compute Attention Matrix
@@ -64,7 +64,7 @@ class SelfAttention(nn.Module):
 
         # Format the output
         x = x.transpose(1, 2)  # B, H, Q, HE -> B, Q, H, HE
-        x = x.reshape(m, s, e)  # B, Q, H, HE -> B, Q, E
+        x = x.reshape(b, s, e)  # B, Q, H, HE -> B, Q, E
         return x
 
 
