@@ -70,7 +70,7 @@ class Solver(object):
         iter_per_epoch = len(self.train_loader)
 
         optimizer = optim.AdamW(self.model.parameters(), lr=self.args.lr, weight_decay=1e-3)
-        linear_warmup = optim.lr_scheduler.LinearLR(optimizer, start_factor=1/self.args.warmup_epochs, end_factor=1.0, total_iters=self.args.warmup_epochs, last_epoch=-1, verbose=True)
+        linear_warmup = optim.lr_scheduler.LinearLR(optimizer, start_factor=1/self.args.warmup_epochs, end_factor=1.0, total_iters=self.args.warmup_epochs-1, last_epoch=-1, verbose=True)
         cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=self.args.epochs-self.args.warmup_epochs, eta_min=1e-5, verbose=True)
 
         best_acc = 0
