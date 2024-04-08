@@ -52,12 +52,14 @@ class SelfAttention(nn.Module):
         xv = self.values(x).reshape(b, s, self.n_attention_heads, self.head_embed_dim)  # B, V, E -> B, V, H, HE
         xv = xv.transpose(1, 2)  # B, V, H, HE -> B, H, V, HE
 
-        # Compute Attention Matrix
+        # Compute Attention presoftmax values
         xk = xk.transpose(-1, -2)  # B, H, K, HE -> B, H, HE, K
         x_attention = torch.matmul(xq, xk)  # B, H, Q, HE  *  B, H, HE, K -> B, H, Q, K
 
         # Scale presoftmax values for stability
         x_attention /= float(self.head_embed_dim) ** 0.5
+
+        # Compute Attention Matrix
         x_attention = torch.softmax(x_attention, dim=-1)
 
         # Compute Attention Values
