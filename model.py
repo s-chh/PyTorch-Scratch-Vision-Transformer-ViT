@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import transformers
 
 # B -> Batch Size
 # C -> Number of Input Channels
@@ -8,19 +9,20 @@ import torch.nn as nn
 # P -> Patch Size
 # E -> Embedding Dimension
 # S -> Sequence Length = IH/P * IW/P
-# Q -> Query Sequence length
-# K -> Key Sequence length
-# V -> Value Sequence length (same as Key length)
+# Q -> Query Sequence length (same as S for self-attention)
+# K -> Key Sequence length (same as S for self-attention)
+# V -> Value Sequence length (same as S for self-attention)
 # H -> Number of heads
 # HE -> Head Embedding Dimension = E/H
 
 
 class EmbedLayer(nn.Module):
-    def __init__(self, n_channels, embed_dim, image_size, patch_size):
+    def __init__(self, n_channels, embed_dim, image_size, patch_size, dropout=0.0):
         super().__init__()
         self.conv1 = nn.Conv2d(n_channels, embed_dim, kernel_size=patch_size, stride=patch_size)  # Pixel Encoding
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim), requires_grad=True)  # Cls Token
         self.pos_embedding = nn.Parameter(torch.zeros(1, (image_size // patch_size) ** 2 + 1, embed_dim), requires_grad=True)  # Positional Embedding
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x):
         x = self.conv1(x)  # B C IH IW -> B E IH/P IW/P (Embedding the patches)
@@ -28,6 +30,8 @@ class EmbedLayer(nn.Module):
         x = x.transpose(1, 2)  # B E S -> B S E 
         x = torch.cat((torch.repeat_interleave(self.cls_token, x.shape[0], 0), x), dim=1)  # Adding classification token at the start of every sequence
         x = x + self.pos_embedding  # Adding positional embedding
+
+        x = self.dropout(x)
         return x
 
 
@@ -38,9 +42,11 @@ class SelfAttention(nn.Module):
         self.n_attention_heads = n_attention_heads
         self.head_embed_dim = embed_dim // n_attention_heads
 
-        self.queries = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads)
-        self.keys = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads)
-        self.values = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads)
+        self.queries = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads) # Queries projection
+        self.keys = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads)    # Keys projection
+        self.values = nn.Linear(self.embed_dim, self.head_embed_dim * self.n_attention_heads)  # Values projection
+
+        self.out_projection = nn.Linear(self.embed_dim, self.embed_dim)
 
     def forward(self, x):
         b, s, e = x.shape
@@ -68,29 +74,34 @@ class SelfAttention(nn.Module):
         # Format the output
         x = x.transpose(1, 2)  # B, H, Q, HE -> B, Q, H, HE
         x = x.reshape(b, s, e)  # B, Q, H, HE -> B, Q, E
+
+        x = self.out_projection(x)  # B, Q, E -> B, Q, E
         return x
 
 
 class Encoder(nn.Module):
-    def __init__(self, embed_dim, n_attention_heads, forward_mul):
+    def __init__(self, embed_dim, n_attention_heads, forward_mul, dropout=0.0):
         super().__init__()
+        self.norm1 = nn.LayerNorm(embed_dim)
         self.attention = SelfAttention(embed_dim, n_attention_heads)
+        self.dropout1 = nn.Dropout(dropout)
+        
+        self.norm2 = nn.LayerNorm(embed_dim)
         self.fc1 = nn.Linear(embed_dim, embed_dim * forward_mul)
         self.activation = nn.GELU()
         self.fc2 = nn.Linear(embed_dim * forward_mul, embed_dim)
-        self.norm1 = nn.LayerNorm(embed_dim)
-        self.norm2 = nn.LayerNorm(embed_dim)
+        self.dropout2 = nn.Dropout(dropout)
 
     def forward(self, x):
-        x = x + self.attention(self.norm1(x)) # Skip connections
-        x = x + self.fc2(self.activation(self.fc1(self.norm2(x))))  # Skip connections
+        x = x + self.dropout1(self.attention(self.norm1(x))) # Skip connections
+        x = x + self.dropout2(self.fc2(self.activation(self.fc1(self.norm2(x)))))  # Skip connections
         return x
 
 
 class Classifier(nn.Module):
     def __init__(self, embed_dim, n_classes):
         super().__init__()
-        # Newer architectures skip fc1 and activations and directly apply fc2.
+        # New architectures skip fc1 and activations and directly apply fc2.
         self.fc1 = nn.Linear(embed_dim, embed_dim)
         self.activation = nn.Tanh()
         self.fc2 = nn.Linear(embed_dim, n_classes)
@@ -104,16 +115,66 @@ class Classifier(nn.Module):
 
 
 class VisionTransformer(nn.Module):
-    def __init__(self, n_channels, embed_dim, n_layers, n_attention_heads, forward_mul, image_size, patch_size, n_classes):
+    def __init__(self, n_channels, embed_dim, n_layers, n_attention_heads, forward_mul, image_size, patch_size, n_classes, dropout=0.1):
         super().__init__()
-        self.embedding = EmbedLayer(n_channels, embed_dim, image_size, patch_size)
-        self.encoder = nn.Sequential(*[Encoder(embed_dim, n_attention_heads, forward_mul) for _ in range(n_layers)], nn.LayerNorm(embed_dim))
+        self.embedding = EmbedLayer(n_channels, embed_dim, image_size, patch_size, dropout=dropout)
+        self.encoder = nn.ModuleList([Encoder(embed_dim, n_attention_heads, forward_mul, dropout=dropout) for _ in range(n_layers)])
         self.norm = nn.LayerNorm(embed_dim) # Final normalization layer after the last block
         self.classifier = Classifier(embed_dim, n_classes)
 
     def forward(self, x):
         x = self.embedding(x)
-        x = self.encoder(x)
+        for block in self.encoder:
+            x = block(x)
         x = self.norm(x)
         x = self.classifier(x)
+        return x
+
+
+def vit_init_weights(m): 
+    if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+        nn.init.trunc_normal_(m.weight, mean=0.0, std=0.02)
+        if m.bias is not None:
+            nn.init.constant_(m.bias, 0)
+
+    elif isinstance(m, nn.LayerNorm):
+        nn.init.constant_(m.weight, 1)
+        nn.init.constant_(m.bias, 0)
+
+    elif isinstance(m, EmbedLayer):
+        nn.init.trunc_normal_(m.cls_token, mean=0.0, std=0.02)
+        nn.init.trunc_normal_(m.pos_embedding, mean=0.0, std=0.02)
+
+
+class transformer(nn.Module):
+    def __init__(self, args=None):
+        super(transformer, self).__init__()
+        self.args = args
+        # self.model = model = models.__dict__['vit_7_4_32'](img_size=32,
+  #                                       num_classes=10,
+  #                                       positional_embedding='learnable',
+  #                                       n_conv_layers=2,
+  #                                       kernel_size=4,
+  #                                       patch_size=4)
+        vit_args = transformers.ViTConfig(hidden_size=192, num_hidden_layers=6, num_attention_heads=4, 
+                                            intermediate_size=192*2, hidden_act='gelu', hidden_dropout_prob=0.1, 
+                                            attention_probs_dropout_prob=0.0, initializer_range=0.02, 
+                                            layer_norm_eps=1e-12, is_encoder_decoder=False, image_size=32, 
+                                            patch_size=4, num_channels=3, qkv_bias=True)
+        
+        self.encoder = transformers.ViTModel(vit_args)
+        # model = transformers.ViTModel(vit_args)
+        # self.encoder = nn.Sequential(*[model.embeddings, model.encoder, get_out(), model.layernorm, model.pooler.dense, model.pooler.activation])
+        # self.encoder = nn.Sequential(*[model.embeddings, model.encoder, get_out(), model.layernorm])
+        # self.fc = nn.Sequential(*[model.pooler.dense, model.pooler.activation])
+        self.clf = nn.Linear(192, 10)
+
+    def forward(self, x, get_deep=False):
+        x = self.encoder(x, return_dict=False)
+        # breakpoint()
+        x = x[1]
+        if get_deep:
+            return x
+        x = self.clf(x)
+        # x = self.model(x)
         return x

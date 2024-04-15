@@ -2,103 +2,188 @@ import torch
 import torch.nn as nn
 import os
 from torch import optim
-from model import VisionTransformer
+from model import VisionTransformer, vit_init_weights, transformer
 from sklearn.metrics import confusion_matrix, accuracy_score
 from data_loader import get_loader
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
 
 class Solver(object):
-    def __init__(self, args):
-        self.args = args
+	def __init__(self, args):
+		self.args = args
 
-        self.train_loader, self.test_loader = get_loader(args)
+		# Get data loaders
+		self.train_loader, self.test_loader = get_loader(args)
 
-        self.model = VisionTransformer(n_channels=self.args.n_channels, embed_dim=self.args.embed_dim, 
-                                        n_layers=self.args.n_layers, n_attention_heads=self.args.n_attention_heads, 
-                                        forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
-                                        patch_size=self.args.patch_size, n_classes=self.args.n_classes)
-        
-        if self.args.is_cuda:
-            print("Using GPU")
-            self.model = self.model.cuda()
-        else:
-            print("Cuda not available.")
+		# Create object of the Vision Transformer
+		self.model = VisionTransformer(n_channels=self.args.n_channels, embed_dim=self.args.embed_dim, 
+										n_layers=self.args.n_layers, n_attention_heads=self.args.n_attention_heads, 
+										forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
+										patch_size=self.args.patch_size, n_classes=self.args.n_classes, dropout=self.args.dropout)
+		# self.model = transformer()
+		self.model.apply(vit_init_weights)
+		
+		# Push to GPU
+		if self.args.is_cuda:
+			print("Using GPU")
+			self.model = self.model.cuda()
+		else:
+			print("Cuda not available.")
 
-        print('--------Network--------')
-        print(self.model)
+		# Display Vision Transformer
+		print('--------Network--------')
+		print(self.model)
 
-        if args.load_model:
-            print("Using pretrained model")
-            self.model.load_state_dict(torch.load(os.path.join(self.args.model_path, 'ViT_model.pt')))
+		# Option to load pretrained model
+		if args.load_model:
+			print("Using pretrained model")
+			self.model.load_state_dict(torch.load(os.path.join(self.args.model_path, 'ViT_model.pt')))
 
-        self.ce = nn.CrossEntropyLoss()
+		# Training loss function
+		self.loss_fn = nn.CrossEntropyLoss()
 
-    def test_dataset(self, loader):
-        self.model.eval()
+		# Arrays to record training progression
+		self.train_losses = []
+		self.test_losses = []
+		self.train_accuracies = []
+		self.test_accuracies = []
 
-        actual = []
-        pred = []
+	def test_dataset(self, loader):
+		# Set Vision Transformer to evaluation mode
+		self.model.eval()
 
-        for (x, y) in loader:
-            if self.args.is_cuda:
-                x = x.cuda()
+		# Arrays to record all labels and logits
+		all_labels = []
+		all_logits = []
 
-            with torch.no_grad():
-                logits = self.model(x)
-            predicted = torch.max(logits, 1)[1]
+		# Testing loop
+		for (x, y) in loader:
+			if self.args.is_cuda:
+				x = x.cuda()
 
-            actual += y.tolist()
-            pred += predicted.tolist()
+			# Avoid capturing gradients in evaluation time for faster speed
+			with torch.no_grad():
+				logits = self.model(x)
 
-        acc = accuracy_score(y_true=actual, y_pred=pred)
-        cm = confusion_matrix(y_true=actual, y_pred=pred, labels=range(self.args.n_classes))
+			all_labels.append(y)
+			all_logits.append(logits.cpu())
 
-        return acc, cm
+		# Convert all captured variables to torch
+		all_labels = torch.cat(all_labels)
+		all_logits = torch.cat(all_logits)
+		all_pred = all_logits.max(1)[1]
+		
+		# Compute loss, accuracy and confusion matrix
+		loss = self.loss_fn(all_logits, all_labels).item()
+		acc = accuracy_score(y_true=all_labels, y_pred=all_pred)
+		cm = confusion_matrix(y_true=all_labels, y_pred=all_pred, labels=range(self.args.n_classes))
 
-    def test(self, train=True):
-        if train:
-            acc, cm = self.test_dataset(self.train_loader)
-            print(f"Train acc: {acc:.2%}\nTrain Confusion Matrix:")
-            print(cm)
+		return acc, cm, loss
 
-        acc, cm = self.test_dataset(self.test_loader)
-        print(f"Test acc: {acc:.2%}\nTest Confusion Matrix:")
-        print(cm)
+	def test(self, train=True):
+		if train:
+			# Test using train loader
+			acc, cm, loss = self.test_dataset(self.train_loader)
+			print(f"Train acc: {acc:.2%}\tTrain loss: {loss:.4f}\nTrain Confusion Matrix:")
+			print(cm)
 
-        return acc
+		# Test using test loader
+		acc, cm, loss = self.test_dataset(self.test_loader)
+		print(f"Test acc: {acc:.2%}\tTest loss: {loss:.4f}\nTrain Confusion Matrix:")
+		print(cm)
 
-    def train(self):
-        iter_per_epoch = len(self.train_loader)
+		return acc, loss
 
-        optimizer = optim.AdamW(self.model.parameters(), lr=self.args.lr, weight_decay=1e-3)
-        linear_warmup = optim.lr_scheduler.LinearLR(optimizer, start_factor=1/self.args.warmup_epochs, end_factor=1.0, total_iters=self.args.warmup_epochs-1, last_epoch=-1, verbose=True)
-        cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=self.args.epochs-self.args.warmup_epochs, eta_min=1e-5, verbose=True)
+	def train(self):
+		iter_per_epoch = len(self.train_loader)
 
-        best_acc = 0
-        for epoch in range(self.args.epochs):
+		# Define optimizer for training the model
+		optimizer = optim.AdamW(self.model.parameters(), lr=self.args.lr, weight_decay=1e-3)
 
-            self.model.train()
+		# scheduler for linear warmup of lr and then cosine decay
+		linear_warmup = optim.lr_scheduler.LinearLR(optimizer, start_factor=1/self.args.warmup_epochs, end_factor=1.0, total_iters=self.args.warmup_epochs-1, last_epoch=-1, verbose=True)
+		cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=self.args.epochs-self.args.warmup_epochs, eta_min=1e-5, verbose=True)
 
-            for i, (x, y) in enumerate(self.train_loader):
-                if self.args.is_cuda:
-                    x, y = x.cuda(), y.cuda()
+		# Variable to capture best test accuracy
+		best_acc = 0
 
-                logits = self.model(x)
-                loss = self.ce(logits, y)
+		# Training loop
+		for epoch in range(self.args.epochs):
 
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
+			# Set model to training mode
+			self.model.train()
 
-                if i % 50 == 0 or i == (iter_per_epoch - 1):
-                    print(f'Ep: {epoch+1}/{self.args.epochs}, It: {i+1}/{iter_per_epoch}, loss: {loss:.4f}')
+			# Arrays to record epoch loss and accuracy
+			train_epoch_loss = []
+			train_epoch_accuracy = []
 
-            test_acc = self.test(train=((epoch+1)%25==0)) # Test training set every 25 epochs
-            best_acc = max(test_acc, best_acc)
-            print(f"Best test acc: {best_acc:.2%}\n")
+			# Loop on loader
+			for i, (x, y) in enumerate(self.train_loader):
 
-            torch.save(self.model.state_dict(), os.path.join(self.args.model_path, "ViT_model.pt"))
-            
-            if epoch < self.args.warmup_epochs:
-                linear_warmup.step()
-            else:
-                cos_decay.step()
+				# Push to GPU
+				if self.args.is_cuda:
+					x, y = x.cuda(), y.cuda()
+
+				# Get output logits from the model 
+				logits = self.model(x)
+
+				# Compute training loss
+				loss = self.loss_fn(logits, y)
+
+				# Updating the model
+				optimizer.zero_grad()
+				loss.backward()
+				optimizer.step()
+
+				# Batch metrics
+				batch_pred = logits.max(1)[1]
+				batch_accuracy = (y==batch_pred).float().mean()
+				train_epoch_loss += [loss.item()]
+				train_epoch_accuracy += [batch_accuracy.item()]
+
+				# Log training progress
+				if i % 50 == 0 or i == (iter_per_epoch - 1):
+					print(f'Ep: {epoch+1}/{self.args.epochs}\tIt: {i+1}/{iter_per_epoch}\tbatch_loss: {loss:.4f}\tbatch_accuracy: {batch_accuracy:.2%}')
+
+			# Test the test set after every epoch
+			test_acc, test_loss = self.test(train=((epoch+1)%25==0)) # Test training set every 25 epochs
+
+			# Capture best test accuracy
+			best_acc = max(test_acc, best_acc)
+			print(f"Best test acc: {best_acc:.2%}\n")
+
+			# Save model
+			torch.save(self.model.state_dict(), os.path.join(self.args.model_path, "ViT_model.pt"))
+			
+			# Update learning rate using schedulers
+			if epoch < self.args.warmup_epochs:
+				linear_warmup.step()
+			else:
+				cos_decay.step()
+
+			# Update training progression metric arrays
+			self.train_losses += [sum(train_epoch_loss)/iter_per_epoch]
+			self.test_losses += [test_loss]
+			self.train_accuracies += [sum(train_epoch_accuracy)/iter_per_epoch]
+			self.test_accuracies += [test_acc]
+
+	def plot_graphs(self):
+		# Plot graph of loss values
+		plt.plot(self.train_losses, color='b', label='Train')
+		plt.plot(self.test_losses, color='r', label='Test')
+		plt.ylabel('Loss')
+		plt.xlabel('Epoch')
+		plt.legend()
+		# plt.show()  # Option to view graph while training
+		plt.savefig(os.path.join(self.args.output_path, 'graph_loss.png'))
+		plt.close('all')
+
+		# Plot graph of accuracies
+		plt.plot(self.train_accuracies, color='b', label='Train')
+		plt.plot(self.test_accuracies, color='r', label='Test')
+		plt.ylabel('Accuracy')
+		plt.xlabel('Epoch')
+		plt.legend()
+		# plt.show()  # Option to view graph while training
+		plt.savefig(os.path.join(self.args.output_path, 'graph_accuracy.png'))
+		plt.close('all')
