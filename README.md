@@ -96,7 +96,7 @@ Training plots:
 
 <table>
   <tr>
-    <th></th>
+    <th>Dataset</th>
     <th>Accuracy</th>
     <th>Loss</th>
   </tr>
