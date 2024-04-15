@@ -1,12 +1,11 @@
+import os
 import torch
 import torch.nn as nn
-import os
 from torch import optim
-from model import VisionTransformer, vit_init_weights, transformer
-from sklearn.metrics import confusion_matrix, accuracy_score
+from model import VisionTransformer, vit_init_weights
 from data_loader import get_loader
+from sklearn.metrics import confusion_matrix, accuracy_score
 import matplotlib.pyplot as plt
-from sklearn.manifold import TSNE
 
 class Solver(object):
 	def __init__(self, args):
@@ -20,7 +19,6 @@ class Solver(object):
 										n_layers=self.args.n_layers, n_attention_heads=self.args.n_attention_heads, 
 										forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
 										patch_size=self.args.patch_size, n_classes=self.args.n_classes, dropout=self.args.dropout)
-		# self.model = transformer()
 		self.model.apply(vit_init_weights)
 		
 		# Push to GPU
@@ -95,7 +93,7 @@ class Solver(object):
 		return acc, loss
 
 	def train(self):
-		iter_per_epoch = len(self.train_loader)
+		iters_per_epoch = len(self.train_loader)
 
 		# Define optimizer for training the model
 		optimizer = optim.AdamW(self.model.parameters(), lr=self.args.lr, weight_decay=1e-3)
@@ -142,8 +140,8 @@ class Solver(object):
 				train_epoch_accuracy += [batch_accuracy.item()]
 
 				# Log training progress
-				if i % 50 == 0 or i == (iter_per_epoch - 1):
-					print(f'Ep: {epoch+1}/{self.args.epochs}\tIt: {i+1}/{iter_per_epoch}\tbatch_loss: {loss:.4f}\tbatch_accuracy: {batch_accuracy:.2%}')
+				if i % 50 == 0 or i == (iters_per_epoch - 1):
+					print(f'Ep: {epoch+1}/{self.args.epochs}\tIt: {i+1}/{iters_per_epoch}\tbatch_loss: {loss:.4f}\tbatch_accuracy: {batch_accuracy:.2%}')
 
 			# Test the test set after every epoch
 			test_acc, test_loss = self.test(train=((epoch+1)%25==0)) # Test training set every 25 epochs
@@ -162,28 +160,38 @@ class Solver(object):
 				cos_decay.step()
 
 			# Update training progression metric arrays
-			self.train_losses += [sum(train_epoch_loss)/iter_per_epoch]
+			self.train_losses += [sum(train_epoch_loss)/iters_per_epoch]
 			self.test_losses += [test_loss]
-			self.train_accuracies += [sum(train_epoch_accuracy)/iter_per_epoch]
+			self.train_accuracies += [sum(train_epoch_accuracy)/iters_per_epoch]
 			self.test_accuracies += [test_acc]
 
 	def plot_graphs(self):
 		# Plot graph of loss values
 		plt.plot(self.train_losses, color='b', label='Train')
 		plt.plot(self.test_losses, color='r', label='Test')
-		plt.ylabel('Loss')
-		plt.xlabel('Epoch')
-		plt.legend()
+
+		plt.ylabel('Loss', fontsize = 18)
+		plt.yticks(fontsize=16)
+		plt.xlabel('Epoch', fontsize = 18)
+		plt.xticks(fontsize=16)
+		plt.legend(fontsize=15, frameon=False)
+
 		# plt.show()  # Option to view graph while training
-		plt.savefig(os.path.join(self.args.output_path, 'graph_loss.png'))
+		plt.savefig(os.path.join(self.args.output_path, 'graph_loss.png'), bbox_inches='tight')
 		plt.close('all')
+
 
 		# Plot graph of accuracies
 		plt.plot(self.train_accuracies, color='b', label='Train')
 		plt.plot(self.test_accuracies, color='r', label='Test')
-		plt.ylabel('Accuracy')
-		plt.xlabel('Epoch')
-		plt.legend()
+
+		plt.ylabel('Loss', fontsize = 18)
+		plt.yticks(fontsize=16)
+		plt.xlabel('Epoch', fontsize = 18)
+		plt.xticks(fontsize=16)
+		plt.legend(fontsize=15, frameon=False)
+
 		# plt.show()  # Option to view graph while training
-		plt.savefig(os.path.join(self.args.output_path, 'graph_accuracy.png'))
+		plt.savefig(os.path.join(self.args.output_path, 'graph_accuracy.png'), bbox_inches='tight')
 		plt.close('all')
+

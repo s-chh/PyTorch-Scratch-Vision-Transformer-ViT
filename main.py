@@ -1,8 +1,8 @@
+import torch
 import argparse
 import datetime
 import os
 from solver import Solver
-import torch
 
 
 def main(args):

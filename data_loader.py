@@ -1,6 +1,5 @@
 import torch
-from torchvision import datasets
-from torchvision import transforms
+from torchvision import datasets, transforms
 import os
 
 

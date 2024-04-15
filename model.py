@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import transformers
 
 # B -> Batch Size
 # C -> Number of Input Channels
@@ -144,37 +143,3 @@ def vit_init_weights(m):
     elif isinstance(m, EmbedLayer):
         nn.init.trunc_normal_(m.cls_token, mean=0.0, std=0.02)
         nn.init.trunc_normal_(m.pos_embedding, mean=0.0, std=0.02)
-
-
-class transformer(nn.Module):
-    def __init__(self, args=None):
-        super(transformer, self).__init__()
-        self.args = args
-        # self.model = model = models.__dict__['vit_7_4_32'](img_size=32,
-  #                                       num_classes=10,
-  #                                       positional_embedding='learnable',
-  #                                       n_conv_layers=2,
-  #                                       kernel_size=4,
-  #                                       patch_size=4)
-        vit_args = transformers.ViTConfig(hidden_size=192, num_hidden_layers=6, num_attention_heads=4, 
-                                            intermediate_size=192*2, hidden_act='gelu', hidden_dropout_prob=0.1, 
-                                            attention_probs_dropout_prob=0.0, initializer_range=0.02, 
-                                            layer_norm_eps=1e-12, is_encoder_decoder=False, image_size=32, 
-                                            patch_size=4, num_channels=3, qkv_bias=True)
-        
-        self.encoder = transformers.ViTModel(vit_args)
-        # model = transformers.ViTModel(vit_args)
-        # self.encoder = nn.Sequential(*[model.embeddings, model.encoder, get_out(), model.layernorm, model.pooler.dense, model.pooler.activation])
-        # self.encoder = nn.Sequential(*[model.embeddings, model.encoder, get_out(), model.layernorm])
-        # self.fc = nn.Sequential(*[model.pooler.dense, model.pooler.activation])
-        self.clf = nn.Linear(192, 10)
-
-    def forward(self, x, get_deep=False):
-        x = self.encoder(x, return_dict=False)
-        # breakpoint()
-        x = x[1]
-        if get_deep:
-            return x
-        x = self.clf(x)
-        # x = self.model(x)
-        return x
