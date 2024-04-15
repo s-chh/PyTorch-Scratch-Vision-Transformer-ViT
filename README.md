@@ -1,5 +1,5 @@
 # Vision Transformer for MNIST and CIFAR-10
-Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to <a href="model.py">model.py</a>). <br> <br>
+### Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to <a href="model.py">model.py</a>). <br> <br>
 
 <ul>
   <li>Scaled-down version of the original ViT architecture from <a href="https://arxiv.org/pdf/2010.11929.pdf">An Image is Worth 16X16 Words</a>. </li>
@@ -10,7 +10,7 @@ Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detai
 
 <br><br>
 
-Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
+## Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
 <table>
   <tr>
     <th>Dataset</th>
@@ -44,7 +44,7 @@ The default path for downloading the dataset is "./data" and can be changed usin
 
 
 <br><br>
-Transformer Config:
+## Transformer Config:
 
 <table>
   <tr>
@@ -92,7 +92,7 @@ Transformer Config:
 
 
 <br><br>
-Training plots:
+## Training plots:
 
 <table>
   <tr>
