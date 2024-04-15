@@ -90,3 +90,34 @@ Transformer Config:
   </tr>
 </table>
 
+
+<br><br>
+Training plots:
+
+<table>
+  <tr>
+    <th></th>
+    <th>Accuracy</th>
+    <th>Loss</th>
+  </tr>
+  <tr>
+    <td>MNIST</td>
+    <td> <img src="output/mnist/graph_accuracy.png"  alt="1" width = 500px height = 250px> </td>
+    <td> <img src="output/mnist/graph_loss.png"  alt="1" width = 500px height = 250px ></td>
+  </tr>
+  <tr>
+    <td>FMNIST</td>
+    <td> <img src="output/fmnist/graph_accuracy.png"  alt="1" width = 500px height = 250px> </td>
+    <td> <img src="output/fmnist/graph_loss.png"  alt="1" width = 500px height = 250px ></td>
+  </tr>
+  <tr>
+    <td>SVHN</td>
+    <td> <img src="output/svhn/graph_accuracy.png"  alt="1" width = 500px height = 250px> </td>
+    <td> <img src="output/svhn/graph_loss.png"  alt="1" width = 500px height = 250px ></td>
+  </tr>
+  <tr>
+    <td>CIFAR10</td>
+    <td> <img src="output/cifar10/graph_accuracy.png"  alt="1" width = 500px height = 250px> </td>
+    <td> <img src="output/cifar10/graph_loss.png"  alt="1" width = 500px height = 250px ></td>
+  </tr>
+</table>
