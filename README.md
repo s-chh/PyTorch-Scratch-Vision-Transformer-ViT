@@ -25,7 +25,7 @@
   <tr>
     <td>Fashion MNIST</td>
     <td>python main.py --dataset fmnist</td>
-    <td>92.0</td>
+    <td>92.3</td>
   </tr>
   <tr>
     <td>SVHN</td>
