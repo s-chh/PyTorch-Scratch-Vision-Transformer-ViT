@@ -35,7 +35,7 @@
   <tr>
     <td>CIFAR-10</td>
     <td>python main.py --dataset cifar10 --n_channels 3 --image_size 32</td>
-    <td>82.1</td>
+    <td>82.1 (83.3 with RandAug)</td>
   </tr>
 </table>
 <br>
