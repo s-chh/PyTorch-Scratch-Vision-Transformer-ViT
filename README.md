@@ -11,6 +11,7 @@
 <br><br>
 
 ## Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
+
 <table>
   <tr>
     <th>Dataset</th>
@@ -39,8 +40,7 @@
   </tr>
 </table>
 <br>
-The default path for downloading the dataset is "./data" and can be changed using the --data_path argument.
-
+Performance can be improved by increasing the model size (embedding size).
 
 
 <br><br>
