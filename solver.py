@@ -6,7 +6,6 @@ from model import VisionTransformer
 from data_loader import get_loader
 from sklearn.metrics import confusion_matrix, accuracy_score
 import matplotlib.pyplot as plt
-from torchsummary import summary
 
 class Solver(object):
 	def __init__(self, args):
@@ -30,9 +29,7 @@ class Solver(object):
 
 		# Display Vision Transformer
 		print('--------Network--------')
-		print(self.model)
-		summary(self.model, (self.args.n_channels, self.args.image_size, self.args.image_size))
-		
+		print(self.model)		
 
 		# Option to load pretrained model
 		if args.load_model:
