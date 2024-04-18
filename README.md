@@ -34,9 +34,9 @@
     <td><strong>96.2</strong></td>
   </tr>
   <tr>
-    <td>CIFAR-10</td>
+    <td>CIFAR10</td>
     <td>python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128 </td>
-    <td>82.1 (<strong>86.3</strong> with RandAug)</td>
+    <td>82.5 (<strong>86.3</strong> with RandAug)</td>
   </tr>
 </table>
 <br>
