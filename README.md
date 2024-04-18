@@ -74,6 +74,11 @@ Performance can be improved by increasing the model size (embedding size).
     <td>128</td>
   </tr>
   <tr>
+    <td>Parameters </td>
+    <td>210k</td>
+    <td>820k</td>
+  </tr>
+  <tr>
     <td>Num of Layers </td>
     <td>6</td>
     <td>6</td>
