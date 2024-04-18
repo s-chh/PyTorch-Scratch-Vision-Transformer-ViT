@@ -3,7 +3,7 @@
 
 <ul>
   <li>Scaled-down version of the original ViT architecture from <a href="https://arxiv.org/pdf/2010.11929.pdf">An Image is Worth 16X16 Words</a>. </li>
-  <li>Has only 210k parameters (Original ViT-Base has 86 million). </li>
+  <li>Has only 200k-800k parameters depending upon the embedding dimension (Original ViT-Base has 86 million). </li>
   <li>Works with small datasets by using a smaller patch size of 4.</li>
   <li>Supported datasets: MNIST, FashionMNIST, SVHN, and CIFAR10.</li>
 </ul>  
