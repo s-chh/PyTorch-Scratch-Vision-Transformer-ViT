@@ -21,22 +21,22 @@
   <tr>
     <td>MNIST</td>
     <td>python main.py --dataset mnist --epochs 100</td>
-    <td>99.5</td>
+    <td><strong>99.5</strong></td>
   </tr>
   <tr>
     <td>Fashion MNIST</td>
     <td>python main.py --dataset fmnist</td>
-    <td>92.3</td>
+    <td><strong>92.3</strong></td>
   </tr>
   <tr>
     <td>SVHN</td>
-    <td>python main.py --dataset svhn --n_channels 3 --image_size 32</td>
-    <td>95.7</td>
+    <td>python main.py --dataset svhn --n_channels 3 --image_size 32 --embed_dim 128 </td>
+    <td><strong>96.2</strong></td>
   </tr>
   <tr>
     <td>CIFAR-10</td>
-    <td>python main.py --dataset cifar10 --n_channels 3 --image_size 32</td>
-    <td>82.1 (83.3 with RandAug)</td>
+    <td>python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128 </td>
+    <td>82.1 (<strong>86.3</strong> with RandAug)</td>
   </tr>
 </table>
 <br>
@@ -71,7 +71,7 @@ Performance can be improved by increasing the model size (embedding size).
   <tr>
     <td>Embedding Size </td>
     <td>64</td>
-    <td>64</td>
+    <td>128</td>
   </tr>
   <tr>
     <td>Num of Layers </td>
