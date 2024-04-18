@@ -91,6 +91,11 @@
     <td>2</td>
     <td>2</td>
   </tr>
+  <tr>
+    <td>Dropout </td>
+    <td>0.1</td>
+    <td>0.1</td>
+  </tr>
 </table>
 
 
