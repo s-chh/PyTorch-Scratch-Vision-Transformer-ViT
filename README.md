@@ -39,8 +39,6 @@
     <td>82.5 (<strong>86.3</strong> with RandAug)</td>
   </tr>
 </table>
-<br>
-Performance can be improved by increasing the model size (embedding size).
 
 
 <br><br>
