@@ -121,6 +121,9 @@ class VisionTransformer(nn.Module):
         self.norm = nn.LayerNorm(embed_dim) # Final normalization layer after the last block
         self.classifier = Classifier(embed_dim, n_classes)
 
+
+        self.apply(vit_init_weights) # Weight initalization
+
     def forward(self, x):
         x = self.embedding(x)
         for block in self.encoder:

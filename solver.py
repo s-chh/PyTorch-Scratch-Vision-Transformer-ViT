@@ -2,10 +2,11 @@ import os
 import torch
 import torch.nn as nn
 from torch import optim
-from model import VisionTransformer, vit_init_weights
+from model import VisionTransformer
 from data_loader import get_loader
 from sklearn.metrics import confusion_matrix, accuracy_score
 import matplotlib.pyplot as plt
+from torchsummary import summary
 
 class Solver(object):
 	def __init__(self, args):
@@ -19,7 +20,6 @@ class Solver(object):
 										n_layers=self.args.n_layers, n_attention_heads=self.args.n_attention_heads, 
 										forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
 										patch_size=self.args.patch_size, n_classes=self.args.n_classes, dropout=self.args.dropout)
-		self.model.apply(vit_init_weights)
 		
 		# Push to GPU
 		if self.args.is_cuda:
@@ -31,6 +31,8 @@ class Solver(object):
 		# Display Vision Transformer
 		print('--------Network--------')
 		print(self.model)
+		summary(self.model, (self.args.n_channels, self.args.image_size, self.args.image_size))
+		
 
 		# Option to load pretrained model
 		if args.load_model:
@@ -185,7 +187,7 @@ class Solver(object):
 		plt.plot(self.train_accuracies, color='b', label='Train')
 		plt.plot(self.test_accuracies, color='r', label='Test')
 
-		plt.ylabel('Loss', fontsize = 18)
+		plt.ylabel('Accuracy', fontsize = 18)
 		plt.yticks(fontsize=16)
 		plt.xlabel('Epoch', fontsize = 18)
 		plt.xticks(fontsize=16)

@@ -43,6 +43,7 @@ def get_loader(args):
         train_transform = transforms.Compose([transforms.Resize([args.image_size, args.image_size]),
                                             transforms.RandomCrop(args.image_size, padding=4), 
                                             transforms.RandomHorizontalFlip(),
+                                            transforms.RandAugment(),  # RandAugment augmentation for strong regularization
                                             transforms.ToTensor(), 
                                             transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2470, 0.2435, 0.2616])])
         train = datasets.CIFAR10(os.path.join(args.data_path, args.dataset), train=True, download=True, transform=train_transform)
