@@ -98,7 +98,7 @@
   </tr>
 </table>
 
-
+<!--
 <br><br>
 ## Training Graphs:
 
@@ -129,3 +129,4 @@
     <td> <img src="outputs/cifar10/graph_loss.png"  alt="CIFAR10_loss" width = 500px height = 250px ></td>
   </tr>
 </table>
+-->
