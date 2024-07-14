@@ -1,6 +1,5 @@
 # Vision Transformer from Scratch in PyTorch
-### Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to <a href="model.py">model.py</a>)
-#### Uses a smaller ViT and processes small-scale datasets like MNIST, CIFAR10, etc., using a smaller patch size.<br> <br> 
+### Simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with Detailed Steps (Refer to <a href="model.py">model.py</a>)
 
 <ul>
   <li>Scaled-down version of the original ViT architecture from <a href="https://arxiv.org/pdf/2010.11929.pdf">An Image is Worth 16X16 Words</a>. </li>
