@@ -1,5 +1,6 @@
-# Vision Transformer for MNIST and CIFAR10 from Scratch
-### Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to <a href="model.py">model.py</a>). <br> <br>
+# Vision Transformer from Scratch in PyTorch
+### Simplified Scratch Pytorch implementation of Vision Transformer (ViT) with detailed steps (Refer to <a href="model.py">model.py</a>)
+#### Uses a Scaled-down ViT and processes small datasets like MNIST, CIFAR10, etc., using a smaller patch size.<br> <br> 
 
 <ul>
   <li>Scaled-down version of the original ViT architecture from <a href="https://arxiv.org/pdf/2010.11929.pdf">An Image is Worth 16X16 Words</a>. </li>
