@@ -23,10 +23,7 @@ class Solver(object):
         
         # Push to GPU
         if self.args.is_cuda:
-            print("Using GPU")
             self.model = self.model.cuda()
-        else:
-            print("Cuda not available.")
 
         # Display Vision Transformer
         print('--------Network--------')

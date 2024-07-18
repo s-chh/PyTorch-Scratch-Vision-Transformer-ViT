@@ -29,6 +29,12 @@ def update_args(args):
     args.output_path = os.path.join(args.output_path, args.dataset)
     args.n_patches   = (args.image_size // args.patch_size) ** 2
     args.is_cuda     = torch.cuda.is_available()  # Check GPU availability
+
+    if self.args.is_cuda:
+        print("Using GPU")
+    else:
+        print("Cuda not available.")
+
     return args
 
 
