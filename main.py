@@ -30,7 +30,7 @@ def update_args(args):
     args.n_patches   = (args.image_size // args.patch_size) ** 2
     args.is_cuda     = torch.cuda.is_available()  # Check GPU availability
 
-    if self.args.is_cuda:
+    if args.is_cuda:
         print("Using GPU")
     else:
         print("Cuda not available.")
