@@ -1,7 +1,7 @@
+import os
 import torch
 import argparse
 import datetime
-import os
 from solver import Solver
 
 
