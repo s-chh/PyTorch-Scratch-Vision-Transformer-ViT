@@ -2,10 +2,11 @@ import os
 import torch
 import torch.nn as nn
 from torch import optim
-from model import VisionTransformer
-from data_loader import get_loader
-from sklearn.metrics import confusion_matrix, accuracy_score
 import matplotlib.pyplot as plt
+from data_loader import get_loader
+from model import VisionTransformer
+from sklearn.metrics import confusion_matrix, accuracy_score
+
 
 class Solver(object):
 	def __init__(self, args):
@@ -16,9 +17,9 @@ class Solver(object):
 
 		# Create object of the Vision Transformer
 		self.model = VisionTransformer(n_channels=self.args.n_channels, embed_dim=self.args.embed_dim, 
-										n_layers=self.args.n_layers, n_attention_heads=self.args.n_attention_heads, 
-										forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
-										patch_size=self.args.patch_size, n_classes=self.args.n_classes, dropout=self.args.dropout)
+									   n_layers=self.args.n_layers, n_attention_heads=self.args.n_attention_heads, 
+									   forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
+									   patch_size=self.args.patch_size, n_classes=self.args.n_classes, dropout=self.args.dropout)
 		
 		# Push to GPU
 		if self.args.is_cuda:
@@ -32,7 +33,7 @@ class Solver(object):
 		print(self.model)		
 
 		# Option to load pretrained model
-		if args.load_model:
+		if self.args.load_model:
 			print("Using pretrained model")
 			self.model.load_state_dict(torch.load(os.path.join(self.args.model_path, 'ViT_model.pt')))
 
@@ -40,10 +41,10 @@ class Solver(object):
 		self.loss_fn = nn.CrossEntropyLoss()
 
 		# Arrays to record training progression
-		self.train_losses = []
-		self.test_losses = []
+		self.train_losses     = []
+		self.test_losses      = []
 		self.train_accuracies = []
-		self.test_accuracies = []
+		self.test_accuracies  = []
 
 	def test_dataset(self, loader):
 		# Set Vision Transformer to evaluation mode
@@ -68,12 +69,12 @@ class Solver(object):
 		# Convert all captured variables to torch
 		all_labels = torch.cat(all_labels)
 		all_logits = torch.cat(all_logits)
-		all_pred = all_logits.max(1)[1]
+		all_pred   = all_logits.max(1)[1]
 		
 		# Compute loss, accuracy and confusion matrix
 		loss = self.loss_fn(all_logits, all_labels).item()
-		acc = accuracy_score(y_true=all_labels, y_pred=all_pred)
-		cm = confusion_matrix(y_true=all_labels, y_pred=all_pred, labels=range(self.args.n_classes))
+		acc  = accuracy_score(y_true=all_labels, y_pred=all_pred)
+		cm   = confusion_matrix(y_true=all_labels, y_pred=all_pred, labels=range(self.args.n_classes))
 
 		return acc, cm, loss
 
@@ -86,7 +87,7 @@ class Solver(object):
 
 		# Test using test loader
 		acc, cm, loss = self.test_dataset(self.test_loader)
-		print(f"Test acc: {acc:.2%}\tTest loss: {loss:.4f}\nTrain Confusion Matrix:")
+		print(f"Test acc: {acc:.2%}\tTest loss: {loss:.4f}\nTest Confusion Matrix:")
 		print(cm)
 
 		return acc, loss
@@ -97,9 +98,9 @@ class Solver(object):
 		# Define optimizer for training the model
 		optimizer = optim.AdamW(self.model.parameters(), lr=self.args.lr, weight_decay=1e-3)
 
-		# scheduler for linear warmup of lr and then cosine decay
+		# scheduler for linear warmup of lr and then cosine decay to 1e-5
 		linear_warmup = optim.lr_scheduler.LinearLR(optimizer, start_factor=1/self.args.warmup_epochs, end_factor=1.0, total_iters=self.args.warmup_epochs-1, last_epoch=-1, verbose=True)
-		cos_decay = optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=self.args.epochs-self.args.warmup_epochs, eta_min=1e-5, verbose=True)
+		cos_decay     = optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=self.args.epochs-self.args.warmup_epochs, eta_min=1e-5, verbose=True)
 
 		# Variable to capture best test accuracy
 		best_acc = 0
@@ -111,7 +112,7 @@ class Solver(object):
 			self.model.train()
 
 			# Arrays to record epoch loss and accuracy
-			train_epoch_loss = []
+			train_epoch_loss     = []
 			train_epoch_accuracy = []
 
 			# Loop on loader
@@ -133,9 +134,9 @@ class Solver(object):
 				optimizer.step()
 
 				# Batch metrics
-				batch_pred = logits.max(1)[1]
-				batch_accuracy = (y==batch_pred).float().mean()
-				train_epoch_loss += [loss.item()]
+				batch_pred 			  = logits.max(1)[1]
+				batch_accuracy        = (y==batch_pred).float().mean()
+				train_epoch_loss     += [loss.item()]
 				train_epoch_accuracy += [batch_accuracy.item()]
 
 				# Log training progress
@@ -159,10 +160,10 @@ class Solver(object):
 				cos_decay.step()
 
 			# Update training progression metric arrays
-			self.train_losses += [sum(train_epoch_loss)/iters_per_epoch]
-			self.test_losses += [test_loss]
+			self.train_losses 	  += [sum(train_epoch_loss)/iters_per_epoch]
+			self.test_losses 	  += [test_loss]
 			self.train_accuracies += [sum(train_epoch_accuracy)/iters_per_epoch]
-			self.test_accuracies += [test_acc]
+			self.test_accuracies  += [test_acc]
 
 	def plot_graphs(self):
 		# Plot graph of loss values
@@ -175,7 +176,7 @@ class Solver(object):
 		plt.xticks(fontsize=16)
 		plt.legend(fontsize=15, frameon=False)
 
-		# plt.show()  # Option to view graph while training
+		# plt.show()  # Uncomment to display graph
 		plt.savefig(os.path.join(self.args.output_path, 'graph_loss.png'), bbox_inches='tight')
 		plt.close('all')
 
@@ -190,7 +191,7 @@ class Solver(object):
 		plt.xticks(fontsize=16)
 		plt.legend(fontsize=15, frameon=False)
 
-		# plt.show()  # Option to view graph while training
+		# plt.show()  # Uncomment to display graph
 		plt.savefig(os.path.join(self.args.output_path, 'graph_accuracy.png'), bbox_inches='tight')
 		plt.close('all')
 

@@ -7,13 +7,13 @@ from solver import Solver
 
 def main(args):
     # Create required directories if they don't exist
-    os.makedirs(args.model_path, exist_ok=True)
+    os.makedirs(args.model_path,  exist_ok=True)
     os.makedirs(args.output_path, exist_ok=True)
 
     solver = Solver(args)
-    solver.train()                  # Training function
-    solver.plot_graphs()            # Training plots
-    solver.test(train=True)         # Testing function
+    solver.train()               # Training function
+    solver.plot_graphs()         # Training plots
+    solver.test(train=True)      # Testing function
 
 
 # Print arguments
@@ -23,13 +23,14 @@ def print_args(args):
     print()
 
 
+# Update arguments
 def update_args(args):
-    # Update arguments
-    args.model_path = os.path.join(args.model_path, args.dataset)
+    args.model_path  = os.path.join(args.model_path, args.dataset)
     args.output_path = os.path.join(args.output_path, args.dataset)
-    args.n_patches = (args.image_size // args.patch_size) ** 2
-    args.is_cuda = torch.cuda.is_available() # Check GPU availability
+    args.n_patches   = (args.image_size // args.patch_size) ** 2
+    args.is_cuda     = torch.cuda.is_available()  # Check GPU availability
     return args
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Simple Vision Transformer from Scratch')
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_path', type=str, default='./outputs', help='path to store training graphs and tsne plots')
 
     # Data arguments
-    parser.add_argument('--dataset', type=str, default='mnist', choices=['mnist', 'fmnist', 'svhn', 'cifar10'], help='dataset to use')
+    parser.add_argument('--dataset', type=str, default='mnist', choices=['mnist', 'fashionmnist', 'svhn', 'cifar10'], help='dataset to use')
     parser.add_argument("--image_size", type=int, default=28, help='image size')
     parser.add_argument("--patch_size", type=int, default=4, help='patch Size')
     parser.add_argument("--n_channels", type=int, default=1, help='number of channels')
