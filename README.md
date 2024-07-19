@@ -99,36 +99,7 @@ Key Points:
     <td>0.1</td>
   </tr>
 </table>
+<br>
 
-<!--
-<br><br>
-## Training Graphs:
+To train Vision Transformer with a different type of position embeddings, check out <a href="https://github.com/s-chh/Vision-Transformer-ViT-Positional-Embeddings">Positional Embeddings for Vision Transformers</a>
 
-<table>
-  <tr>
-    <th>Dataset</th>
-    <th>Accuracy</th>
-    <th>Loss</th>
-  </tr>
-  <tr>
-    <td>MNIST</td>
-    <td> <img src="outputs/mnist/graph_accuracy.png"  alt="MNIST_accuracy" width = 500px height = 250px> </td>
-    <td> <img src="outputs/mnist/graph_loss.png"  alt="MNIST_loss" width = 500px height = 250px ></td>
-  </tr>
-  <tr>
-    <td>FMNIST</td>
-    <td> <img src="outputs/fmnist/graph_accuracy.png"  alt="FMNIST_accuracy" width = 500px height = 250px> </td>
-    <td> <img src="outputs/fmnist/graph_loss.png"  alt="FMNIST_loss" width = 500px height = 250px ></td>
-  </tr>
-  <tr>
-    <td>SVHN</td>
-    <td> <img src="outputs/svhn/graph_accuracy.png"  alt="SVHN_accuracy" width = 500px height = 250px> </td>
-    <td> <img src="outputs/svhn/graph_loss.png"  alt="SVHN_loss" width = 500px height = 250px ></td>
-  </tr>
-  <tr>
-    <td>CIFAR10</td>
-    <td> <img src="outputs/cifar10/graph_accuracy.png"  alt="CIFAR10_accuracy" width = 500px height = 250px> </td>
-    <td> <img src="outputs/cifar10/graph_loss.png"  alt="CIFAR10_loss" width = 500px height = 250px ></td>
-  </tr>
-</table>
--->
