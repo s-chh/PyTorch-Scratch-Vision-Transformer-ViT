@@ -16,10 +16,11 @@ class Solver(object):
         self.train_loader, self.test_loader = get_loader(args)
 
         # Create object of the Vision Transformer
-        self.model = VisionTransformer(n_channels=self.args.n_channels, embed_dim=self.args.embed_dim, 
-                                       n_layers=self.args.n_layers, n_attention_heads=self.args.n_attention_heads, 
+        self.model = VisionTransformer(n_channels=self.args.n_channels,   embed_dim=self.args.embed_dim, 
+                                       n_layers=self.args.n_layers,       n_attention_heads=self.args.n_attention_heads, 
                                        forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
-                                       patch_size=self.args.patch_size, n_classes=self.args.n_classes, dropout=self.args.dropout)
+                                       patch_size=self.args.patch_size,   n_classes=self.args.n_classes, 
+                                       dropout=self.args.dropout)
         
         # Push to GPU
         if self.args.is_cuda:
