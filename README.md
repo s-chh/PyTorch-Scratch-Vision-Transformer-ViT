@@ -38,7 +38,12 @@ Key Points:
   <tr>
     <td>CIFAR10</td>
     <td>python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128 </td>
-    <td>82.5 (<strong>86.3</strong> with RandAug)</td>
+    <td><strong>86.3</stron (82.5 w/o RandAug)</td>
+  </tr>
+  <tr>
+    <td>CIFAR100</td>
+    <td>python main.py --dataset cifar100 --n_channels 3 --image_size 32 --embed_dim 128 </td>
+    <td><strong>59.6</stron (55.8 w/o RandAug)</td>
   </tr>
 </table>
 
@@ -50,7 +55,7 @@ Key Points:
   <tr>
     <th>Config</th>
     <th>MNIST and FMNIST</th>
-    <th>SVHN and CIFAR10</th>
+    <th>SVHN and CIFAR</th>
   </tr>
   <tr>
     <td>Input Size</td>
