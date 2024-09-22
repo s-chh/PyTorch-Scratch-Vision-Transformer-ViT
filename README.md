@@ -38,12 +38,12 @@ Key Points:
   <tr>
     <td>CIFAR10</td>
     <td>python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128 </td>
-    <td><strong>86.3</stron (82.5 w/o RandAug)</td>
+    <td><strong>86.3</strong> (82.5 w/o RandAug)</td>
   </tr>
   <tr>
     <td>CIFAR100</td>
     <td>python main.py --dataset cifar100 --n_channels 3 --image_size 32 --embed_dim 128 </td>
-    <td><strong>59.6</stron (55.8 w/o RandAug)</td>
+    <td><strong>59.6</strong> (55.8 w/o RandAug)</td>
   </tr>
 </table>
 
