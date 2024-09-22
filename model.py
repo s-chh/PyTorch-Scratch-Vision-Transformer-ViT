@@ -15,9 +15,28 @@ import torch.nn as nn
 # V -> Value Sequence length (equal to S for self-attention)
 # H -> Number of heads
 # HE -> Head Embedding Dimension = E/H
-
+# CL -> Number of Classes
 
 class EmbedLayer(nn.Module):
+    """
+    Class for Embedding an Image.
+    It breaks image into patches and embeds patches using a Conv2D Operation (Works same as the Linear layer).
+    Next, a learnable positional embedding vector is added to all the patch embeddings to provide spatial position.
+    Finally, a classification token is added which is used to classify the image.
+
+    Parameters:
+        n_channels (int) : Number of channels of the input image
+        embed_dim  (int) : Embedding dimension
+        image_size (int) : Image size
+        patch_size (int) : Patch size
+        dropout  (float) : dropout value
+
+    Input:
+        x (tensor): Image Tensor of shape B, C, IW, IH
+    
+    Returns:
+        Tensor: Embedding of the image of shape B, S, E
+    """    
     def __init__(self, n_channels, embed_dim, image_size, patch_size, dropout=0.0):
         super().__init__()
         self.conv1         = nn.Conv2d(n_channels, embed_dim, kernel_size=patch_size, stride=patch_size)                       # Patch Encoding
@@ -37,6 +56,19 @@ class EmbedLayer(nn.Module):
 
 
 class SelfAttention(nn.Module):
+    """
+    Class for computing self attention Self-Attention
+
+    Parameters:
+        embed_dim (int)        : Embedding dimension
+        n_attention_heads (int): Number of attention heads to use for performing MultiHeadAttention
+    
+    Input:
+        x (tensor): Tensor of shape B, S, E
+
+    Returns:
+        Tensor: Output after Self-Attention Module of shape B, S, E
+    """    
     def __init__(self, embed_dim, n_attention_heads):
         super().__init__()
         self.embed_dim          = embed_dim
@@ -78,6 +110,21 @@ class SelfAttention(nn.Module):
 
 
 class Encoder(nn.Module):
+    """
+    Class for creating an encoder layer
+
+    Parameters:
+        embed_dim (int)         : Embedding dimension
+        n_attention_heads (int) : Number of attention heads to use for performing MultiHeadAttention
+        forward_mul (float)     : Used to calculate dimension of the hidden fc layer = embed_dim * forward_mul
+        dropout (float)         : Dropout parameter
+    
+    Input:
+        x (tensor): Tensor of shape B, S, E
+
+    Returns:
+        Tensor: Output of the encoder block of shape B, S, E
+    """    
     def __init__(self, embed_dim, n_attention_heads, forward_mul, dropout=0.0):
         super().__init__()
         self.norm1      = nn.LayerNorm(embed_dim)
@@ -97,6 +144,20 @@ class Encoder(nn.Module):
 
 
 class Classifier(nn.Module):
+    """
+    Classification module of the Vision Transformer. Uses the embedding of the classification token to generate logits.
+
+    Parameters:
+        embed_dim (int) : Embedding dimension
+        n_classes (int) : Number of classes
+    
+    Input:
+        x (tensor): Tensor of shape B, S, E
+
+    Returns:
+        Tensor: Logits of shape B, CL
+    """    
+
     def __init__(self, embed_dim, n_classes):
         super().__init__()
         # New architectures skip fc1 and activations and directly apply fc2.
@@ -105,14 +166,34 @@ class Classifier(nn.Module):
         self.fc2        = nn.Linear(embed_dim, n_classes)
 
     def forward(self, x):
-        x = x[:, 0, :]              # Get CLS token
-        x = self.fc1(x)
-        x = self.activation(x)
-        x = self.fc2(x)
+        x = x[:, 0, :]              # B, S, E -> B, E          Get CLS token
+        x = self.fc1(x)             # B, E    -> B, E
+        x = self.activation(x)      # B, E    -> B, E    
+        x = self.fc2(x)             # B, E    -> B, CL
         return x
 
 
 class VisionTransformer(nn.Module):
+    """
+    Vision Transformer Class.
+
+    Parameters:
+        n_channels (int)        : Number of channels of the input image
+        embed_dim  (int)        : Embedding dimension
+        n_layers   (int)        : Number of encoder blocks to use
+        n_attention_heads (int) : Number of attention heads to use for performing MultiHeadAttention
+        forward_mul (float)     : Used to calculate dimension of the hidden fc layer = embed_dim * forward_mul
+        image_size (int)        : Image size
+        patch_size (int)        : Patch size
+        n_classes (int)         : Number of classes
+        dropout  (float)        : dropout value
+    
+    Input:
+        x (tensor): Image Tensor of shape B, C, IW, IH
+
+    Returns:
+        Tensor: Logits of shape B, CL
+    """    
     def __init__(self, n_channels, embed_dim, n_layers, n_attention_heads, forward_mul, image_size, patch_size, n_classes, dropout=0.1):
         super().__init__()
         self.embedding  = EmbedLayer(n_channels, embed_dim, image_size, patch_size, dropout=dropout)
@@ -132,6 +213,10 @@ class VisionTransformer(nn.Module):
 
 
 def vit_init_weights(m): 
+    """
+    function for initializing the weights of the Vision Transformer.
+    """    
+
     if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
         nn.init.trunc_normal_(m.weight, mean=0.0, std=0.02)
         if m.bias is not None:

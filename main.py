@@ -39,7 +39,7 @@ def update_args(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Simple Vision Transformer from Scratch')
+    parser = argparse.ArgumentParser(description='Simple and easy to understand PyTorch implementation of Vision Transformer (ViT) from scratch')
 
     # Training Arguments
     parser.add_argument('--epochs', type=int, default=200, help='number of training epochs')
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_path', type=str, default='./outputs', help='path to store training graphs and tsne plots')
 
     # Data arguments
-    parser.add_argument('--dataset', type=str, default='mnist', choices=['mnist', 'fashionmnist', 'svhn', 'cifar10'], help='dataset to use')
+    parser.add_argument('--dataset', type=str, default='mnist', choices=['mnist', 'fashionmnist', 'svhn', 'cifar10', 'cifar100'], help='dataset to use')
     parser.add_argument("--image_size", type=int, default=28, help='image size')
     parser.add_argument("--patch_size", type=int, default=4, help='patch Size')
     parser.add_argument("--n_channels", type=int, default=1, help='number of channels')

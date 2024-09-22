@@ -59,6 +59,20 @@ def get_loader(args):
                                              transforms.Normalize([0.4914, 0.4822, 0.4465], [0.2470, 0.2435, 0.2616])])
         test = datasets.CIFAR10(os.path.join(args.data_path, args.dataset), train=False, download=True, transform=test_transform)
 
+    elif args.dataset == 'cifar100':
+        train_transform = transforms.Compose([transforms.Resize([args.image_size, args.image_size]),
+                                            transforms.RandomCrop(args.image_size, padding=4), 
+                                            transforms.RandomHorizontalFlip(),
+                                            transforms.RandAugment(),  # RandAugment augmentation for strong regularization
+                                            transforms.ToTensor(), 
+                                            transforms.Normalize([0.5071, 0.4867, 0.4408], [0.2675, 0.2565, 0.2761])])
+        train = datasets.CIFAR100(os.path.join(args.data_path, args.dataset), train=True, download=True, transform=train_transform)
+
+        test_transform = transforms.Compose([transforms.Resize([args.image_size, args.image_size]), 
+                                             transforms.ToTensor(), 
+                                             transforms.Normalize([0.5071, 0.4867, 0.4408], [0.2675, 0.2565, 0.2761])])
+        test = datasets.CIFAR100(os.path.join(args.data_path, args.dataset), train=False, download=True, transform=test_transform)
+
     else:
         print("Unknown dataset")
         exit(0)
