@@ -106,5 +106,3 @@ Key Points:
 </table>
 <br>
 
-To train Vision Transformer with a different type of position embeddings, check out <a href="https://github.com/s-chh/Vision-Transformer-ViT-Positional-Embeddings">Positional Embeddings for Vision Transformers</a>
-
