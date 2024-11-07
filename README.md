@@ -1,5 +1,5 @@
 # Vision Transformer from Scratch in PyTorch
-This is a simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with detailed Steps (Refer to <a href="model.py">model.py</a>)
+### This is a simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with detailed Steps (Refer to <a href="model.py">model.py</a>)
 
 <br> 
 
