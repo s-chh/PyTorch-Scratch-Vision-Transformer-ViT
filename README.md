@@ -1,9 +1,8 @@
 # Vision Transformer from Scratch in PyTorch
 ### This is a simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with detailed Steps (Refer to <a href="model.py">model.py</a>)
 
-<br> 
 
-## Key Points:
+## Overview:
 <ul>
   <li>The default network is a scaled-down version of the original ViT architecture from the <a href="https://arxiv.org/pdf/2010.11929.pdf">ViT Paper</a>. </li>
   <li>Has only 200k-800k parameters depending upon the embedding dimension (Original ViT-Base has 86 million). </li>
@@ -12,7 +11,7 @@
   <li>Can be used with bigger datasets by increasing the model parameters and patch size.</li>
 </ul>  
 
-<br><br>
+<br>
 
 ## Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
 
