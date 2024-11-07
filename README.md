@@ -7,7 +7,7 @@ This is a simplified Scratch Pytorch Implementation of Vision Transformer (ViT) 
 <ul>
   <li>The default network is a scaled-down version of the original ViT architecture from the <a href="https://arxiv.org/pdf/2010.11929.pdf">ViT Paper</a>. </li>
   <li>Has only 200k-800k parameters depending upon the embedding dimension (Original ViT-Base has 86 million). </li>
-  <li>Tested on MNIST, FashionMNIST, SVHN, and CIFAR10 datasets. </li>
+  <li>Tested on MNIST, FashionMNIST, SVHN, CIFAR10, and CIFAR100 datasets. </li>
   <li>Uses a smaller patch size of 4.</li>
   <li>Can be used with bigger datasets by increasing the model parameters and patch size.</li>
 </ul>  
