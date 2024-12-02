@@ -1,7 +1,6 @@
 # Vision Transformer from Scratch in PyTorch
 ### This is a simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with detailed Steps (Refer to <a href="model.py">model.py</a>)
 
-
 ## Overview:
 <ul>
   <li>The default network is a scaled-down version of the original ViT architecture from the <a href="https://arxiv.org/pdf/2010.11929.pdf">ViT Paper</a>. </li>
@@ -9,10 +8,10 @@
   <li>Tested on MNIST, FashionMNIST, SVHN, CIFAR10, and CIFAR100 datasets. </li>
   <li>Uses a smaller patch size of 4.</li>
   <li>Can be used with bigger datasets by increasing the model parameters and patch size.</li>
+  <li>(<strong>Newly Added)</strong> Option to use PyTorch's inbuilt transformer layers.</li>
 </ul>  
 
 <br>
-
 ## Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
 
 <table>
@@ -48,6 +47,7 @@
   </tr>
 </table>
 
+<strong>use_torch_transformer_layers</strong> argument (bool) switches between PyTorch's inbuilt transformer layers and the implemented one for defining the Vision Transformer's Encoder(Refer to <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215">model.py</a>).
 
 <br><br>
 ## Transformer Config:
