@@ -8,7 +8,7 @@
   <li>Tested on MNIST, FashionMNIST, SVHN, CIFAR10, and CIFAR100 datasets. </li>
   <li>Uses a smaller patch size of 4.</li>
   <li>Can be used with bigger datasets by increasing the model parameters and patch size.</li>
-  <li>Option to use PyTorch's inbuilt transformer layers or the implemented one to define the ViT's Encoder.</li>
+  <li>Option to use PyTorch's inbuilt transformer layers in-place of the implemented one to define the ViT.</li>
 </ul> 
 
 ## Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
@@ -46,7 +46,7 @@
   </tr>
 </table>
 
-<strong>use_torch_transformer_layers</strong> argument (in <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/cf5c88251c1b1f15b46954fa7013bfc86980ddd6/main.py#L61">main.py</a>) switches between PyTorch's inbuilt transformer layers and the implemented one for defining the Vision Transformer's Encoder (code at <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215">model.py</a>).
+<strong>use_torch_transformer_layers</strong> argument (in <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/cf5c88251c1b1f15b46954fa7013bfc86980ddd6/main.py#L61">main.py</a>) switches between PyTorch's inbuilt transformer layers and the implemented one for defining the Vision Transformer's Encoder and its layers (code at <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215">model.py</a>).
 
 ## Transformer Config:
 
@@ -103,5 +103,5 @@
     <td>0.1</td>
   </tr>
 </table>
-Further optimizing the network can provide additional performance gains.
+Further optimizing the configuration can provide additional performance gains.
 
