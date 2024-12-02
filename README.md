@@ -10,8 +10,8 @@
   <li>Can be used with bigger datasets by increasing the model parameters and patch size.</li>
   <li>(<strong>Newly Added)</strong> Option to use PyTorch's inbuilt transformer layers.</li>
 </ul>  
-
 <br>
+
 ## Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
 
 <table>
