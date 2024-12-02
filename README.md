@@ -8,7 +8,7 @@
   <li>Tested on MNIST, FashionMNIST, SVHN, CIFAR10, and CIFAR100 datasets. </li>
   <li>Uses a smaller patch size of 4.</li>
   <li>Can be used with bigger datasets by increasing the model parameters and patch size.</li>
-  <li>(<strong>Newly Added)</strong> Option to use PyTorch's inbuilt transformer layers instead of the implemented one for defining the Vision Transformer's Encoder.</li>
+  <li>Option to use PyTorch's inbuilt transformer layers or the implemented one to define the ViT's Encoder.</li>
 </ul> 
 
 ## Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
