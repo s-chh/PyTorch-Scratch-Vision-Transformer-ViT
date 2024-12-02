@@ -103,5 +103,5 @@
     <td>0.1</td>
   </tr>
 </table>
-Further optimizing the network can result in additional gains.
+Further optimizing the network can provide additional performance gains.
 
