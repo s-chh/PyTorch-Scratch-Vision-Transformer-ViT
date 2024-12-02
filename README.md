@@ -47,9 +47,10 @@
   </tr>
 </table>
 
-<strong>use_torch_transformer_layers</strong> argument (bool) switches between PyTorch's inbuilt transformer layers and the implemented one for defining the Vision Transformer's Encoder(Refer to <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215">model.py</a>).
+<strong>use_torch_transformer_layers</strong> (type bool) argument (in <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/cf5c88251c1b1f15b46954fa7013bfc86980ddd6/main.py#L61">main.py</a>)) switches between PyTorch's inbuilt transformer layers and the implemented one for defining the Vision Transformer's Encoder (code at <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215">model.py</a>).
 
-<br><br>
+<br>
+
 ## Transformer Config:
 
 <table>
