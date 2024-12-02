@@ -48,8 +48,6 @@
 
 <strong>use_torch_transformer_layers</strong> argument (in <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/cf5c88251c1b1f15b46954fa7013bfc86980ddd6/main.py#L61">main.py</a>) switches between PyTorch's inbuilt transformer layers and the implemented one for defining the Vision Transformer's Encoder (code at <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215">model.py</a>).
 
-<br>
-
 ## Transformer Config:
 
 <table>
@@ -105,5 +103,5 @@
     <td>0.1</td>
   </tr>
 </table>
-<br>
+Further optimizing the network can result in additional gains.
 
