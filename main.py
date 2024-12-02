@@ -33,7 +33,7 @@ def update_args(args):
     if args.is_cuda:
         print("Using GPU")
     else:
-        print("Cuda not available.")
+        print("Cuda not available. Using CPU.")
 
     return args
 
@@ -58,6 +58,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type=str, default='./data/', help='path to store downloaded dataset')
 
     # ViT Arguments
+    parser.add_argument("--use_torch_transformer_layers", type=bool, default=False, help="Use PyTorch Transformer Encoder layers instead of using scratch implementation.")
     parser.add_argument("--embed_dim", type=int, default=64, help='dimensionality of the latent space')
     parser.add_argument("--n_attention_heads", type=int, default=4, help='number of heads to use in Multi-head attention')
     parser.add_argument("--forward_mul", type=int, default=2, help='forward multiplier')

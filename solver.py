@@ -4,9 +4,8 @@ import torch.nn as nn
 from torch import optim
 import matplotlib.pyplot as plt
 from data_loader import get_loader
-from model import VisionTransformer
 from sklearn.metrics import confusion_matrix, accuracy_score
-
+from model import VisionTransformer, VisionTransformer_pytorch
 
 class Solver(object):
     def __init__(self, args):
@@ -16,12 +15,23 @@ class Solver(object):
         self.train_loader, self.test_loader = get_loader(args)
 
         # Create object of the Vision Transformer
-        self.model = VisionTransformer(n_channels=self.args.n_channels,   embed_dim=self.args.embed_dim, 
-                                       n_layers=self.args.n_layers,       n_attention_heads=self.args.n_attention_heads, 
-                                       forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
-                                       patch_size=self.args.patch_size,   n_classes=self.args.n_classes, 
-                                       dropout=self.args.dropout)
+
+        if self.args.use_torch_transformer_layers:
+            # Uses new Pytorch inbuilt transformer encoder layers
+            self.model = VisionTransformer_pytorch(n_channels=self.args.n_channels,   embed_dim=self.args.embed_dim, 
+                                                   n_layers=self.args.n_layers,       n_attention_heads=self.args.n_attention_heads, 
+                                                   forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
+                                                   patch_size=self.args.patch_size,   n_classes=self.args.n_classes, 
+                                                   dropout=self.args.dropout)
+        else:
+            # model from Scratch
+            self.model = VisionTransformer(n_channels=self.args.n_channels,   embed_dim=self.args.embed_dim, 
+                                           n_layers=self.args.n_layers,       n_attention_heads=self.args.n_attention_heads, 
+                                           forward_mul=self.args.forward_mul, image_size=self.args.image_size, 
+                                           patch_size=self.args.patch_size,   n_classes=self.args.n_classes, 
+                                           dropout=self.args.dropout)
         
+
         # Push to GPU
         if self.args.is_cuda:
             self.model = self.model.cuda()
@@ -29,6 +39,10 @@ class Solver(object):
         # Display Vision Transformer
         print('--------Network--------')
         print(self.model)       
+
+        # Training parameters stats
+        n_parameters = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
+        print(f"Number of trainable parameters in the model: {n_parameters}")
 
         # Option to load pretrained model
         if self.args.load_model:
@@ -162,6 +176,7 @@ class Solver(object):
             self.test_losses      += [test_loss]
             self.train_accuracies += [sum(train_epoch_accuracy)/iters_per_epoch]
             self.test_accuracies  += [test_acc]
+
 
     def plot_graphs(self):
         # Plot graph of loss values

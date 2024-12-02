@@ -85,7 +85,7 @@ def get_loader(args):
                                                drop_last=True)
 
     test_loader = torch.utils.data.DataLoader(dataset=test,
-                                              batch_size=args.batch_size,
+                                              batch_size=args.batch_size*2,
                                               shuffle=False,
                                               num_workers=args.n_workers,
                                               drop_last=False)
