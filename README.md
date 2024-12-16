@@ -103,5 +103,4 @@
     <td>0.1</td>
   </tr>
 </table>
-Further optimizing the configuration can provide additional performance gains.
 
