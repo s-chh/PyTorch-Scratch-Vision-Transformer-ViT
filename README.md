@@ -9,6 +9,8 @@
 - Can be used with bigger datasets by increasing the model parameters and patch size.
 - Option to switch between PyTorch’s inbuilt transformer layers and implemented layers one to define the ViT.
 
+<br>
+
 ## Usage
 
 Run the following commands to train the model on supported datasets:
@@ -30,6 +32,8 @@ python main.py --dataset fmnist --use_torch_transformer_layers
 ```
 - If not using `--use_torch_transformer_layers`, the custom-implemented layers are used instead.
 
+<br>
+
 ## Datasets and Performance
 The model has been tested on multiple datasets with the following results:
 
@@ -49,6 +53,8 @@ The following curves show the training and validation accuracy and loss for MNIS
 <img src="outputs/mnist/graph_accuracy.png" width="300"></img> | <img src="outputs/mnist/graph_loss.png" width="300"></img>
 
 For the accuracy and loss curves of all other datasets, refer to the [outputs](outputs/)  folder.
+
+<br>
 
 ## Model Configurations
 Below are the key configurations for the Vision Transformer:
