@@ -28,7 +28,7 @@ python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128
 ```bash
 python main.py --dataset fmnist --use_torch_transformer_layers
 ```
-- Not using `--use_torch_transformer_layers` uses custom implementated layers.
+- If not using `--use_torch_transformer_layers`, the custom-implemented layers are used instead.
 
 ## Datasets and Performance
 The model has been tested on multiple datasets with the following results:
