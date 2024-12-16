@@ -1,106 +1,67 @@
 # Vision Transformer from Scratch in PyTorch
-### This is a simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with detailed Steps (Refer to <a href="model.py">model.py</a>)
+### This repository provides a simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with detailed Steps (Refer to <a href="model.py">model.py</a>)
 
 ## Overview:
-<ul>
-  <li>The default network is a scaled-down version of the original ViT architecture from the <a href="https://arxiv.org/pdf/2010.11929.pdf">ViT Paper</a>. </li>
-  <li>Has only 200k-800k parameters depending upon the embedding dimension (Original ViT-Base has 86 million). </li>
-  <li>Tested on MNIST, FashionMNIST, SVHN, CIFAR10, and CIFAR100 datasets. </li>
-  <li>Uses a smaller patch size of 4.</li>
-  <li>Can be used with bigger datasets by increasing the model parameters and patch size.</li>
-  <li>Option to use PyTorch's inbuilt transformer layers in-place of the implemented one to define the ViT.</li>
-</ul> 
+- The default network is a Scaled-down of the original Vision Transformer (ViT) architecture from the [ViT Paper](https://arxiv.org/pdf/2010.11929.pdf).
+- Has only 200k-800k parameters depending upon the embedding dimension (Original ViT-Base has 86 million).
+- Tested on Common Datasets: MNIST, FashionMNIST, SVHN, CIFAR10, and CIFAR100.
+  - Uses 4×4 patch size for creating longer sequences for small image sizes.
+- Can be used with bigger datasets by increasing the model parameters and patch size.
+- Option to switch between PyTorch’s inbuilt transformer layers and implemented layers one to define the ViT.
 
-## Run commands (also available in <a href="scripts.sh">scripts.sh</a>): <br>
+## Usage
 
-<table>
-  <tr>
-    <th>Dataset</th>
-    <th>Run command</th>
-    <th>Test Acc</th>
-  </tr>
-  <tr>
-    <td>MNIST</td>
-    <td>python main.py --dataset mnist --epochs 100</td>
-    <td><strong>99.5</strong></td>
-  </tr>
-  <tr>
-    <td>Fashion MNIST</td>
-    <td>python main.py --dataset fmnist</td>
-    <td><strong>92.3</strong></td>
-  </tr>
-  <tr>
-    <td>SVHN</td>
-    <td>python main.py --dataset svhn --n_channels 3 --image_size 32 --embed_dim 128 </td>
-    <td><strong>96.2</strong></td>
-  </tr>
-  <tr>
-    <td>CIFAR10</td>
-    <td>python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128 </td>
-    <td><strong>86.3</strong> (82.5 w/o RandAug)</td>
-  </tr>
-  <tr>
-    <td>CIFAR100</td>
-    <td>python main.py --dataset cifar100 --n_channels 3 --image_size 32 --embed_dim 128 </td>
-    <td><strong>59.6</strong> (55.8 w/o RandAug)</td>
-  </tr>
-</table>
+Run the following commands to train the model on supported datasets:
+```bash
+# Train on MNIST
+python main.py --dataset mnist --epochs 100
 
-<strong>use_torch_transformer_layers</strong> argument (in <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/cf5c88251c1b1f15b46954fa7013bfc86980ddd6/main.py#L61">main.py</a>) switches between PyTorch's inbuilt transformer layers and the implemented one for defining the Vision Transformer's Encoder and its layers (code at <a href="https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215">model.py</a>).
+# Train on CIFAR10 with custom embedding size
+python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128
+```
 
-## Transformer Config:
+- View more commands in [`scripts.sh`](scripts.sh).
+- Adjust configurations for datasets, image size, and embedding dimensions as needed.
 
-<table>
-  <tr>
-    <th>Config</th>
-    <th>MNIST and FMNIST</th>
-    <th>SVHN and CIFAR</th>
-  </tr>
-  <tr>
-    <td>Input Size</td>
-    <td> 1 X 28 X 28   </td>
-    <td> 3 X 32 X 32  </td>
-  </tr>
+#### Key Argument: [`--use_torch_transformer_layers`](https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/cf5c88251c1b1f15b46954fa7013bfc86980ddd6/main.py#L61")
+- Use PyTorch's inbuilt Transformer layers (code [here](https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215)):
+```bash
+python main.py --dataset fmnist --use_torch_transformer_layers
+```
+- Not using `--use_torch_transformer_layers` uses custom implementated layers.
 
-  <tr>
-    <td>Patch Size</td>
-    <td>4</td>
-    <td>4</td>
-  </tr>
-  <tr>
-    <td>Sequence Length</td>
-    <td>7*7 = 49</td>
-    <td>8*8 = 64</td>
-  </tr>
-  <tr>
-    <td>Embedding Size </td>
-    <td>64</td>
-    <td>128</td>
-  </tr>
-  <tr>
-    <td>Parameters </td>
-    <td>210k</td>
-    <td>820k</td>
-  </tr>
-  <tr>
-    <td>Num of Layers </td>
-    <td>6</td>
-    <td>6</td>
-  </tr>
-  <tr>
-    <td>Num of Heads </td>
-    <td>4</td>
-    <td>4</td>
-  </tr>
-  <tr>
-    <td>Forward Multiplier </td>
-    <td>2</td>
-    <td>2</td>
-  </tr>
-  <tr>
-    <td>Dropout </td>
-    <td>0.1</td>
-    <td>0.1</td>
-  </tr>
-</table>
+## Datasets and Performance
+The model has been tested on multiple datasets with the following results:
+
+| Dataset      | Run Command | Test Accuracy   |
+|--------------|-------------|-----------------|
+| MNIST        | `python main.py --dataset mnist --epochs 100` | **99.5** |
+| FashionMNIST | `python main.py --dataset fmnist` | **92.3** |
+| SVHN         | `python main.py --dataset svhn --n_channels 3 --image_size 32 --embed_dim 128` | **96.2** |
+| CIFAR10      | `python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128` | **86.3** (82.5 w/o RandAug) |
+| CIFAR100     | `python main.py --dataset cifar100 --n_channels 3 --image_size 32 --embed_dim 128` | **59.6** (55.8 w/o RandAug) |
+
+<br>
+
+The following curves show the training and validation accuracy and loss for MNIST. 
+| Accuracy Curve | Loss Curve |
+| --- | --- |
+<img src="outputs/mnist/graph_accuracy.png" width="300"></img> | <img src="outputs/mnist/graph_loss.png" width="300"></img>
+
+For the accuracy and loss curves of all other datasets, refer to the [outputs](outputs/)  folder.
+
+## Model Configurations
+Below are the key configurations for the Vision Transformer:
+
+| Parameter             | MNIST / FMNIST  | SVHN / CIFAR    |
+|-----------------------|-----------------|-----------------|
+| **Input Size**        | 1 × 28 × 28     | 3 × 32 × 32     |
+| **Patch Size**        | 4               | 4               |
+| **Sequence Length**   | 49              | 64              |
+| **Embedding Size**    | 64              | 128             |
+| **Parameters**        | 210k            | 820k            |
+| **Number of Layers**  | 6               | 6               |
+| **Number of Heads**   | 4               | 4               |
+| **Forward Multiplier**| 2               | 2               |
+| **Dropout**           | 0.1             | 0.1             |
 
