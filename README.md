@@ -1,5 +1,5 @@
 # Vision Transformer from Scratch in PyTorch
-### Simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with detailed Steps (Refer to <a href="model.py">model.py</a>)
+### Simplified Scratch Pytorch Implementation of Vision Transformer (ViT) with detailed steps (code at <a href="model.py">model.py</a>)
 
 ## Overview:
 - The default network is a Scaled-down of the original Vision Transformer (ViT) architecture from the [ViT Paper](https://arxiv.org/pdf/2010.11929.pdf).
