@@ -60,7 +60,7 @@ For the accuracy and loss curves of all other datasets, refer to the [outputs](o
 Below are the key configurations for the Vision Transformer:
 
 | Parameter             | MNIST / FMNIST  | SVHN / CIFAR    |
-|-----------------------|-----------------|-----------------|
+|:----------------------|:---------------:|:---------------:|
 | **Input Size**        | 1 × 28 × 28     | 3 × 32 × 32     |
 | **Patch Size**        | 4               | 4               |
 | **Sequence Length**   | 49              | 64              |
