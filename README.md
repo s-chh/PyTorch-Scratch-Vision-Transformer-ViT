@@ -24,13 +24,7 @@ python main.py --dataset cifar10 --n_channels 3 --image_size 32 --embed_dim 128
 
 - View more commands in [`scripts.sh`](scripts.sh).
 - Adjust configurations for datasets, image size, and embedding dimensions as needed.
-
-#### Key Argument: [`--use_torch_transformer_layers`](https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/cf5c88251c1b1f15b46954fa7013bfc86980ddd6/main.py#L61")
-- Use PyTorch's inbuilt Transformer layers (code [here](https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215)):
-```bash
-python main.py --dataset fmnist --use_torch_transformer_layers
-```
-- If not using `--use_torch_transformer_layers`, the custom-implemented layers are used instead.
+- [`--use_torch_transformer_layers`](https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/cf5c88251c1b1f15b46954fa7013bfc86980ddd6/main.py#L61") argument switches between PyTorch’s inbuilt transformer layers and the implemented layers (code [here](https://github.com/s-chh/PyTorch-Scratch-Vision-Transformer-ViT/blob/026c5bed8d6dc088b24066510dddc01bde0b163d/model.py#L215)).
 
 <br>
 
