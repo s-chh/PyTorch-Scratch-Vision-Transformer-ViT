@@ -6,7 +6,7 @@
 - Has only 200k-800k parameters depending upon the embedding dimension (Original ViT-Base has 86 million).
 - Tested on Common Datasets: MNIST, FashionMNIST, SVHN, CIFAR10, and CIFAR100.
   - Uses 4×4 patch size for creating longer sequences for small image sizes.
-- Can be used with bigger datasets by increasing the model parameters and patch size.
+- For using with bigger datasets, increase the model parameters and patch size.
 - Option to switch between PyTorch’s inbuilt transformer layers and implemented layers one to define the ViT.
 
 <br>
